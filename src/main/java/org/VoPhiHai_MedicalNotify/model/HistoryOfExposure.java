@@ -1,6 +1,7 @@
 package org.VoPhiHai_MedicalNotify.model;
 
 import javax.persistence.*;
+import java.util.Date;
 
 @Entity
 @Table(name = "history_of_exposure")
@@ -13,6 +14,7 @@ public class HistoryOfExposure {
     @ManyToOne(fetch = FetchType.EAGER)
     private Exposure exposure;
     private boolean hasExposure;
+    private Date dateDeclare;
 
     public HistoryOfExposure() {
     }
@@ -47,5 +49,13 @@ public class HistoryOfExposure {
 
     public void setHasExposure(boolean hasExposure) {
         this.hasExposure = hasExposure;
+    }
+
+    public Date getDateDeclare() {
+        return dateDeclare;
+    }
+
+    public void setDateDeclare(Date dateDeclare) {
+        this.dateDeclare = dateDeclare;
     }
 }

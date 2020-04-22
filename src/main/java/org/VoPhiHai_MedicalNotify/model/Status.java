@@ -1,6 +1,7 @@
 package org.VoPhiHai_MedicalNotify.model;
 
 import javax.persistence.*;
+import java.util.Date;
 
 @Entity
 @Table(name = "status")
@@ -15,6 +16,7 @@ public class Status {
     @JoinColumn(name = "symptomId")
     private Symptom symptom;
     private boolean haveSymptom;
+    private Date dateDeclare;
 
     public Status() {
     }
@@ -49,5 +51,13 @@ public class Status {
 
     public void setHaveSymptom(boolean haveSymptom) {
         this.haveSymptom = haveSymptom;
+    }
+
+    public Date getDateDeclare() {
+        return dateDeclare;
+    }
+
+    public void setDateDeclare(Date dateDeclare) {
+        this.dateDeclare = dateDeclare;
     }
 }
