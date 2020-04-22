@@ -10,21 +10,26 @@ import java.util.List;
 public class National {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    private short id;
+    private Short id;
     private String name;
 
     @OneToMany(mappedBy = "national", fetch = FetchType.LAZY)
     @JsonIgnore
     private List<Province> provinces;
 
+    @OneToMany(mappedBy = "Nationality", fetch = FetchType.LAZY)
+    @JsonIgnore
+    private List<Person> people;
+
+
     public National() {
     }
 
-    public short getId() {
+    public Short getId() {
         return id;
     }
 
-    public void setId(short id) {
+    public void setId(Short id) {
         this.id = id;
     }
 
@@ -42,5 +47,13 @@ public class National {
 
     public void setProvinces(List<Province> provinces) {
         this.provinces = provinces;
+    }
+
+    public List<Person> getPeople() {
+        return people;
+    }
+
+    public void setPeople(List<Person> people) {
+        this.people = people;
     }
 }

@@ -21,4 +21,47 @@ public class Transport {
     @OneToMany(mappedBy = "transport", fetch = FetchType.LAZY)
     @JsonIgnore
     private List<Entry> entries;
+
+    public Transport() {
+    }
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public TransportType getTransportType() {
+        return transportType;
+    }
+
+    public void setTransportType(TransportType transportType) {
+        this.transportType = transportType;
+    }
+
+    public String getTransportationNo() {
+        return transportationNo;
+    }
+
+    public void setTransportationNo(String transportationNo) {
+        this.transportationNo = transportationNo;
+    }
+
+    public String getNote() {
+        return note;
+    }
+
+    public void setNote(String note) {
+        this.note = note;
+    }
+
+    public List<Entry> getEntries() {
+        return entries;
+    }
+
+    public void setEntries(List<Entry> entries) {
+        this.entries = entries;
+    }
 }

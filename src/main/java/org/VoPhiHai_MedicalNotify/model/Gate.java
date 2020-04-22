@@ -10,7 +10,7 @@ import java.util.List;
 public class Gate {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    private short id;
+    private Short id;
     @Column(length = 100)
     private String name;
     @OneToMany(mappedBy = "gate", fetch = FetchType.LAZY)
@@ -20,11 +20,11 @@ public class Gate {
     public Gate() {
     }
 
-    public short getId() {
+    public Short getId() {
         return id;
     }
 
-    public void setId(short id) {
+    public void setId(Short id) {
         this.id = id;
     }
 
