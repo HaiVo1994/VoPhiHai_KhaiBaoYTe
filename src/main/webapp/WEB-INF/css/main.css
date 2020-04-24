@@ -1,0 +1,26 @@
+body{
+    background-image : url('/img/sky-space-dark-galaxy-2150.jpg');
+    background-color: #5a6268;
+}
+footer{
+    position: static;
+    left: 0;
+    bottom: 0;
+    width: 100%;
+    color: floralwhite;
+}
+.inside{
+    background-color: whitesmoke;
+    padding-top: 2%;
+    padding-bottom: 3%;
+}
+h3{
+    text-align: center;
+}
+.declare_tittle{
+    font-weight: bold;
+    font-size: medium;
+}
+span{
+    color: red;
+}
