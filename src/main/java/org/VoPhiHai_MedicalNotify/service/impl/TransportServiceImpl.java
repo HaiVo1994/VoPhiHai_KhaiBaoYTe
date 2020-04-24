@@ -44,6 +44,11 @@ public class TransportServiceImpl implements TransportService {
     }
 
     @Override
+    public Transport findById(Long id) {
+        return transportRepository.findById(id).orElse(null);
+    }
+
+    @Override
     public Transport findByTransportationNo(String transportationNo) {
         return transportRepository.findByTransportationNo(transportationNo);
     }

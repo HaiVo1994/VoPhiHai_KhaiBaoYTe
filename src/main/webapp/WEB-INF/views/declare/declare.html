@@ -16,12 +16,18 @@
                 <div class="row">
                     <div class="form-group col-sm-12 col-lg-8">
                         <label for="entry_gate">Cửa khẩu <span>(*)</span></label>
-                        <select class="form-control" id="entry_gate">
+                        <select class="form-control select_search" id="entry_gate">
                             <th:block th:each="gate:${gates}">
                                 <option th:value="${gate.id}" th:text="${gate.name}"></option>
                             </th:block>
 
                         </select>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="form-group col-sm-12 col-md-8">
+                        <label for="person_legalDocument">Số hộ chiếu hoặc giấy thông hành hợp pháp khác <span>(*)</span></label>
+                        <input type="text" class="form-control" id="person_legalDocument" maxlength="50">
                     </div>
                 </div>
                 <div class="row">
@@ -47,19 +53,14 @@
                     </div>
                     <div class="form-group col-sm-12 col-md-4">
                         <label for="person_nationality">Quốc tịch <span>(*)</span></label>
-                        <select class="form-control" id="person_nationality" >
+                        <select class="form-control select_search" id="person_nationality" >
                             <th:block th:each="nationality:${nationals}">
                                 <option th:value="${nationality.id}" th:text="${nationality.name}"></option>
                             </th:block>
                         </select>
                     </div>
                 </div>
-                <div class="row">
-                    <div class="form-group col-sm-12 col-md-8">
-                        <label for="person_legalDocument">Số hộ chiếu hoặc giấy thông hành hợp pháp khác <span>(*)</span></label>
-                        <input type="text" class="form-control" id="person_legalDocument" maxlength="50">
-                    </div>
-                </div>
+
                 <div class="row">
                     <div class="form-group">
                         <label for="transportType">Phương tiện <span>(*)</span></label>
@@ -94,7 +95,7 @@
                     </div>
                     <div class="form-group col-sm-6">
                         <label for="national_Departure">Quốc gia/ Vùng lãnh thổ <span>(*)</span></label>
-                        <select class="form-control" id="national_Departure">
+                        <select class="form-control select_search" id="national_Departure">
                             <th:block th:each="national:${nationals}">
                                 <option th:value="${national.id}" th:text="${national.name}"></option>
                             </th:block>
@@ -102,7 +103,7 @@
                     </div>
                     <div class="form-group col-sm-6">
                         <label for="entry_provinceDeparture">Tỉnh <span>(*)</span></label>
-                        <select class="form-control" id="entry_provinceDeparture">
+                        <select class="form-control select_search" id="entry_provinceDeparture">
                         </select>
                     </div>
                     <div class="col-sm-12">
@@ -110,7 +111,7 @@
                     </div>
                     <div class="form-group col-sm-6">
                         <label for="national_destination">Quốc gia/ Vùng lãnh thổ <span>(*)</span></label>
-                        <select class="form-control" id="national_destination">
+                        <select class="form-control select_search" id="national_destination">
                             <th:block th:each="national:${nationals}">
                                 <option th:value="${national.id}" th:text="${national.name}"></option>
                             </th:block>
@@ -118,14 +119,18 @@
                     </div>
                     <div class="form-group col-sm-6">
                         <label for="entry_provinceDestination">Tỉnh <span>(*)</span></label>
-                        <select class="form-control" id="entry_provinceDestination">
+                        <select class="form-control select_search" id="entry_provinceDestination">
                         </select>
                     </div>
                     <div class="col-sm-12">
                         <label for="entry_placeTravel">
                             Trong vòng 14 ngày qua, Anh/Chị có đến quốc gia/vùng lãnh thổ nào? <span>(*)</span>
                         </label>
-                        <textarea type="text" class="form-control" id="entry_placeTravel"></textarea>
+                        <select class="js-example-basic-multiple" name="states[]" multiple="multiple" id="entry_placeTravel">
+                            <th:block th:each="national:${nationals}">
+                                <option th:value="${national.id}" th:text="${national.name}"></option>
+                            </th:block>
+                        </select>
                     </div>
                 </div>
                 <div class="row">
@@ -249,7 +254,6 @@
     <th:block th:replace="layout::jsAll"></th:block>
     <script th:src="@{/js/web/declare.js}"></script>
     <script>
-        var declare = new Declare();
         $(document).ready(function () {
             var birth = $("#person_birthYear");
             birth.html("");
@@ -260,6 +264,9 @@
                 birth.append("<option value='" + year + "'>" + year + "</option>");
             }
             birth.val(end-25);
+
+            $(".select_search").select2();
+
             declare.getProvince($("#national_Departure").val(), $("#entry_provinceDeparture"));
             declare.getProvince($("#national_destination").val(), $("#entry_provinceDestination"));
             declare.getProvinceForLocation($("#contact_Province"),$("#contact_District"),$("#contact_Location"));
@@ -285,17 +292,17 @@
             }
         );
         
-        function getEntry() {
+        function getEntry(transportId, personId) {
             return {
                 "gate": $("#entry_gate").val(),
-                "transport": null,
+                "transport": transportId,
                 "seatNo": $("#entry_seatNo").val(),
                 "departureDate": $("#entry_departureDate").val(),
                 "immigrationDate": $("#entry_immigrationDate").val(),
                 "placeTravel": $("#entry_placeTravel").val(),
                 "provinceDeparture": $("#entry_provinceDeparture").val(),
                 "provinceDestination": $("#entry_provinceDestination").val(),
-                "person": null,
+                "person": personId,
                 "contactHelpDeclare": null,
                 "statuses": null,
                 "listCure": $("#entry_listCure"),

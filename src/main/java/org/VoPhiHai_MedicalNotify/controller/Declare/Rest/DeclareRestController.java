@@ -55,4 +55,11 @@ public class DeclareRestController {
         return new ResponseEntity<>(idTransport, HttpStatus.OK);
     }
 
+    @Autowired
+    private EntryService entryService;
+//    @RequestMapping(value = "/create_entry", method = RequestMethod.POST, produces = "application/json;charset=UTF-8")
+//    public ResponseEntity<HashMap<String, String>> create_entry(@RequestBody JsonObject jsonEntry){
+//
+//    }
+
 }

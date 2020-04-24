@@ -11,6 +11,7 @@ import java.util.List;
 public interface TransportService {
     Transport create(Transport transport);
     Transport create(JsonObject transportJson);
+    Transport findById(Long id);
     Transport findByTransportationNo(String transportationNo );
     List<HashMap<String, Long>> countPersonHaveSymptomInPlane(Date begin, Date end);
     List<HashMap<String, Long>> countPersonHaveExposureInPlane(Date begin, Date end);

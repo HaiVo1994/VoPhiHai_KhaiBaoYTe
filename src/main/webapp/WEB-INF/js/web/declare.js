@@ -1,102 +1,99 @@
-class Declare {
-    getProvince(nationalId, provinceSelect) {
-        $.ajax(
-            {
-                url: urlRoot + "location/province/" + nationalId ,
-                method: 'GET',
-                dataType: 'json',
-                contentType: 'application/json'
-            }
-        ).done(function (data) {
-            provinceSelect.html("");
-            $.each(data,
-                function (index, province) {
-                    provinceSelect.append(
-                        "<option value='" + province.id +"'>" + province.name +"</option>"
-                    );
+var declare = declare || {};
+declare.getProvince = function(nationalId, provinceSelect) {
+    $.ajax(
+        {
+            url: urlRoot + "location/province/" + nationalId ,
+            method: 'GET',
+            dataType: 'json',
+            contentType: 'application/json'
+        }
+    ).done(function (data) {
+        provinceSelect.html("");
+        $.each(data,
+            function (index, province) {
+                provinceSelect.append(
+                    "<option value='" + province.id +"'>" + province.name +"</option>"
+                );
 
-                });
-        });
-    }
-    getProvinceForLocation(provinceSelect, districtSelect, wardSelect) {
-        var thisClass = this;
-        $.ajax(
-            {
-                url: urlRoot + "location/province/" + vietNamId ,
-                method: 'GET',
-                dataType: 'json',
-                contentType: 'application/json'
-            }
-        ).done(function (data) {
-            provinceSelect.html("");
-            $.each(data,
-                function (index, province) {
-                    provinceSelect.append(
-                        "<option value='" + province.id +"'>" + province.name +"</option>"
-                    );
-                });
-                thisClass.getDistrictForLocation(provinceSelect.val(), districtSelect, wardSelect);
+            });
+    });
+}
+declare.getProvinceForLocation = function(provinceSelect, districtSelect, wardSelect) {
+    $.ajax(
+        {
+            url: urlRoot + "location/province/" + vietNamId ,
+            method: 'GET',
+            dataType: 'json',
+            contentType: 'application/json'
+        }
+    ).done(function (data) {
+        provinceSelect.html("");
+        $.each(data,
+            function (index, province) {
+                provinceSelect.append(
+                    "<option value='" + province.id +"'>" + province.name +"</option>"
+                );
+            });
+            declare.getDistrictForLocation(provinceSelect.val(), districtSelect, wardSelect);
 
-        });
-    }
-    getDistrictForLocation(provinceId, districtSelect, wardSelect){
-        var thisClass = this;
-        $.ajax(
-            {
-                url: urlRoot + "location/district/" + provinceId ,
-                method: 'GET',
-                dataType: 'json',
-                contentType: 'application/json'
-            }
-        ).done(function (data) {
-            districtSelect.html("");
-            $.each(data,
-                function (index, province) {
-                    districtSelect.append(
-                        "<option value='" + province.id +"'>" + province.name +"</option>"
-                    );
-                });
-            thisClass.getWard(districtSelect.val(), wardSelect);
-        });
-    }
+    });
+}
+declare.getDistrictForLocation = function(provinceId, districtSelect, wardSelect){
+    $.ajax(
+        {
+            url: urlRoot + "location/district/" + provinceId ,
+            method: 'GET',
+            dataType: 'json',
+            contentType: 'application/json'
+        }
+    ).done(function (data) {
+        districtSelect.html("");
+        $.each(data,
+            function (index, province) {
+                districtSelect.append(
+                    "<option value='" + province.id +"'>" + province.name +"</option>"
+                );
+            });
+        declare.getWard(districtSelect.val(), wardSelect);
+    });
+}
 
-    getDistrict(provinceId, districtSelect) {
-        $.ajax(
-            {
-                url: urlRoot + "/location/district/" + provinceId ,
-                method: 'GET',
-                dataType: 'json',
-                contentType: 'application/json'
-            }
-        ).done(function (data) {
-            districtSelect.html("");
-            $.each(data,
-                function (index, province) {
-                    districtSelect.append(
-                        "<option value='" + province.id +"'>" + province.name +"</option>"
-                    );
+declare.getDistrict = function(provinceId, districtSelect) {
+    $.ajax(
+        {
+            url: urlRoot + "/location/district/" + provinceId ,
+            method: 'GET',
+            dataType: 'json',
+            contentType: 'application/json'
+        }
+    ).done(function (data) {
+        districtSelect.html("");
+        $.each(data,
+            function (index, province) {
+                districtSelect.append(
+                    "<option value='" + province.id +"'>" + province.name +"</option>"
+                );
 
-                });
-        });
-    }
+            });
+    });
+}
 
-    getWard(districtId, wardSelect) {
-        $.ajax(
-            {
-                url: urlRoot + "location/ward/" + districtId ,
-                method: 'GET',
-                dataType: 'json',
-                contentType: 'application/json'
-            }
-        ).done(function (data) {
-            wardSelect.html("");
-            $.each(data,
-                function (index, province) {
-                    wardSelect.append(
-                        "<option value='" + province.id +"'>" + province.name +"</option>"
-                    );
+declare.getWard = function(districtId, wardSelect) {
+    $.ajax(
+        {
+            url: urlRoot + "location/ward/" + districtId ,
+            method: 'GET',
+            dataType: 'json',
+            contentType: 'application/json'
+        }
+    ).done(function (data) {
+        wardSelect.html("");
+        $.each(data,
+            function (index, province) {
+                wardSelect.append(
+                    "<option value='" + province.id +"'>" + province.name +"</option>"
+                );
 
-                });
-        });
-    }
+            });
+    });
 }
