@@ -35,11 +35,11 @@ public class Entry {
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "idOfProvinceDeparture")
     @NotNull
-    private District provinceDeparture;
+    private Province provinceDeparture;
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "idOfProvinceDestination")
     @NotNull
-    private District provinceDestination;
+    private Province provinceDestination;
 
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "idPerson")
@@ -128,19 +128,19 @@ public class Entry {
         this.placeTravel = placeTravel;
     }
 
-    public District getProvinceDeparture() {
+    public Province getProvinceDeparture() {
         return provinceDeparture;
     }
 
-    public void setProvinceDeparture(District provinceDeparture) {
+    public void setProvinceDeparture(Province provinceDeparture) {
         this.provinceDeparture = provinceDeparture;
     }
 
-    public District getProvinceDestination() {
+    public Province getProvinceDestination() {
         return provinceDestination;
     }
 
-    public void setProvinceDestination(District provinceDestination) {
+    public void setProvinceDestination(Province provinceDestination) {
         this.provinceDestination = provinceDestination;
     }
 

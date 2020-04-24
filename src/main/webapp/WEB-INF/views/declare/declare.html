@@ -46,7 +46,7 @@
                         </select>
                     </div>
                     <div class="form-group col-sm-12 col-md-4">
-                        <label for="person_nationality">Cửa khẩu <span>(*)</span></label>
+                        <label for="person_nationality">Quốc tịch <span>(*)</span></label>
                         <select class="form-control" id="person_nationality" >
                             <th:block th:each="nationality:${nationals}">
                                 <option th:value="${nationality.id}" th:text="${nationality.name}"></option>
@@ -172,8 +172,32 @@
                         <p class="declare_tittle">
                             Trong vòng 14 ngày (tính đến thời điểm làm thủ tục xuất cảnh, nhập cảnh, quá cảnh) Anh/Chị có thấy xuất hiện dấu hiệu nào sau đây không? (*)
                         <p>
+                        <div class="table-responsive">
+                            <table class="table">
+                                <thead>
+                                    <tr>
+                                        <th style="width: 80%">Triệu chứng</th>
+                                        <th style="width: 10%">Có</th>
+                                        <th style="width: 10%">Không</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr th:each="symptom:${symptoms}">
+                                        <td th:text="${symptom.name}">
+                                        </td>
+                                        <td>
+                                            <input type="radio" class="form-check-input symptom_checkbox"
+                                                th:name="${symptom.id}" value="1">
+                                        </td>
+                                        <td>
+                                            <input type="radio" class="form-check-input symptom_checkbox"
+                                                   th:name="${symptom.id}" value="0">
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
                     </div>
-                    <div class="col-sm-12" id="status"></div>
                     <div class="col-sm-12">
                         <label for="entry_listCure">
                             Danh sách vắc-xin hoặc sinh phẩm được sử dụng
@@ -184,8 +208,38 @@
                 <div class="row">
                     <div class="col-sm-12">
                         <p class="declare_tittle">Lịch sử phơi nhiễm: Trong vòng 14 ngày qua, Anh/Chị có <span>(*)</span></p>
+                        <div class="table-responsive">
+                            <table class="table">
+                                <thead>
+                                <tr>
+                                    <th style="width: 80%"></th>
+                                    <th style="width: 10%">Có</th>
+                                    <th style="width: 10%">Không</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                <tr th:each="exposure:${exposures}">
+                                    <td th:text="${exposure.name}">
+                                    </td>
+                                    <td>
+                                        <input type="radio" class="form-check-input exposure_checkbox"
+                                               th:name="${exposure.id}" value="1">
+                                    </td>
+                                    <td>
+                                        <input type="radio" class="form-check-input exposure_checkbox"
+                                               th:name="${exposure.id}" value="0">
+                                    </td>
+                                </tr>
+                                </tbody>
+                            </table>
+                        </div>
                     </div>
-                    <div class="col-sm-12" id ="historyOfExposure"></div>
+                </div>
+                <div class="row">
+                    <button type="button" class="btn btn-primary"
+                        onclick="healthDeclaration()">
+                        GỬI TỜ KHAI
+                    </button>
                 </div>
             </div>
         </div>
@@ -197,7 +251,7 @@
     <script>
         var declare = new Declare();
         $(document).ready(function () {
-            var birth = $("#birth_year");
+            var birth = $("#person_birthYear");
             birth.html("");
             var end = new Date().getFullYear(),
                 begin = end - 200;
@@ -205,6 +259,7 @@
             for (var year = begin; year<=end; year++){
                 birth.append("<option value='" + year + "'>" + year + "</option>");
             }
+            birth.val(end-25);
             declare.getProvince($("#national_Departure").val(), $("#entry_provinceDeparture"));
             declare.getProvince($("#national_destination").val(), $("#entry_provinceDestination"));
             declare.getProvinceForLocation($("#contact_Province"),$("#contact_District"),$("#contact_Location"));
@@ -229,6 +284,119 @@
                 declare.getWard($(this).val(),$("#contact_Location"));
             }
         );
+        
+        function getEntry() {
+            return {
+                "gate": $("#entry_gate").val(),
+                "transport": null,
+                "seatNo": $("#entry_seatNo").val(),
+                "departureDate": $("#entry_departureDate").val(),
+                "immigrationDate": $("#entry_immigrationDate").val(),
+                "placeTravel": $("#entry_placeTravel").val(),
+                "provinceDeparture": $("#entry_provinceDeparture").val(),
+                "provinceDestination": $("#entry_provinceDestination").val(),
+                "person": null,
+                "contactHelpDeclare": null,
+                "statuses": null,
+                "listCure": $("#entry_listCure"),
+                "historyOfExposures": null
+            };
+        }
+        function getPerson() {
+            return {
+                "legalDocument": $("#person_legalDocument").val(),
+                "name": $("#person_name").val(),
+                "birthYear": $("#person_birthYear").val(),
+                "gender": $("#person_gender").val(),
+                "Nationality": {
+                    "id": $("#person_nationality").val()
+                }
+            };
+        }
+        function getContact() {
+            var namePersonEntry = $("#person_name").val();
+            return {
+                "name": namePersonEntry,
+                "person": null,
+                "location": {
+                    "id": $("#contact_Location").val()
+                },
+                "address": $("#contact_address").val(),
+                "phone": $("#contact_phone").val(),
+                "email": $("#contact_email").val(),
+                "create_by":namePersonEntry
+            };
+        }
+        function getTransport() {
+            return {
+                "transportType": $("#transportType").val(),
+                "transportationNo": $("#transport_transportationNo").val(),
+                "note": $("#transport_note").val()
+            };
+        }
+        function getStatuses() {
+            var length = 0,
+                idSymptom = 0,
+                checkSymptom = 0,
+                status = [];
+            $(".symptom_checkbox").map(
+                function( index ){
+                    if ($(this).prop("checked")){
+                        idSymptom = $(this).attr("name");
+                        checkSymptom = $(this).val();
+                        status.push(
+                            {
+                                "symptom":{
+                                    "id":idSymptom
+                                },
+                                "haveSymptom": checkSymptom
+                            }
+                        );
+                    }
+                    length = index;
+                }
+            );
+            if ( (length + 1) !== (status.length*2)){
+                console.log("Khai Báo Thiếu Tình Trạng Sức Khỏe: " + status.length + "/" + (length/2));
+                return null;
+            }
+            else{
+                console.log("Khai Báo Đủ Tình Trạng Sức Khỏe");
+                return status;
+            }
+        }
+        function getHistoryOfExposure() {
+            var length = 0,
+                idExposure = 0,
+                checkExposure = 0,
+                history_of_exposure = [];
+            $(".exposure_checkbox").map(
+                function( index ){
+                    if ($(this).prop("checked")){
+                        idExposure = $(this).attr("name");
+                        checkExposure = $(this).val();
+                        history_of_exposure.push(
+                            {
+                                "exposure":{
+                                    "id":idExposure
+                                },
+                                "hasExposure": checkExposure
+                            }
+                        );
+                    }
+                    length = index;
+                }
+            );
+            if ( (length + 1) !== (history_of_exposure.length*2)){
+                console.log("Khai Báo Thiếu Lịch Sử Phơi Nhiễm:" + history_of_exposure.length + "/" + (length/2));
+                return null;
+            }
+            else{
+                console.log("Khai Báo Đủ Lịch Sử Phơi Nhiễm");
+                return history_of_exposure;
+            }
+        }
+
     </script>
 </body>
 </html>

@@ -22,17 +22,43 @@ public class ContactServiceImpl implements ContactService {
     }
 
     @Override
-    public void create(Contact contact) {
-        contactRepository.save(contact);
+    public Contact create(Contact contact) {
+        contact.setCreate_at(new Date());
+        return contactRepository.save(contact);
     }
 
     @Override
-    public void change(Contact contact, Person person) {
+    public Contact create(Contact contact, String nameHelper) {
+        contact.setCreate_by(nameHelper);
+        return this.create(contact);
+    }
+
+    @Override
+    public Contact change(Contact contact, Person person) {
         Contact currentContact = this.findCurrentContactByPerson(person);
-        currentContact.setDisable_at(new Date());
-        currentContact.setDisable_by(contact.getCreate_by());
-        currentContact.setEnabled(false);
-        contactRepository.save(currentContact);
-        contactRepository.save(contact);
+        if (currentContact!=null){
+            if (
+                    (currentContact.getEmail().equals(contact.getAddress())) &&
+                            (currentContact.getEmail().equals(contact.getEmail())) &&
+                            (currentContact.getName().equals(contact.getName())) &&
+                            (currentContact.getLocation() == contact.getLocation()) &&
+                            (currentContact.getPhone().equals(contact.getPhone()))
+            ){
+                return currentContact;
+            }
+            else {
+                currentContact.setDisable_at(new Date());
+                currentContact.setDisable_by(contact.getCreate_by());
+                currentContact.setEnabled(false);
+                contactRepository.save(currentContact);
+            }
+        }
+        return this.create(contact);
+    }
+
+    @Override
+    public Contact change(Contact contact, Person person, String nameHelper) {
+        contact.setCreate_by(nameHelper);
+        return this.change(contact,person);
     }
 }

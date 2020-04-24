@@ -1,5 +1,7 @@
 package org.VoPhiHai_MedicalNotify.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import javax.persistence.*;
 import java.util.Date;
 import java.util.List;
@@ -19,9 +21,11 @@ public class Person {
     @JoinColumn(name = "nationalityId")
     private National Nationality;
     @OneToMany(mappedBy = "person",fetch = FetchType.LAZY)
+    @JsonIgnore
     private List<Contact> contacts;
 
     @OneToMany(mappedBy = "person",fetch = FetchType.LAZY)
+    @JsonIgnore
     private List<Entry> entries;
 
     @Column(length = 200)

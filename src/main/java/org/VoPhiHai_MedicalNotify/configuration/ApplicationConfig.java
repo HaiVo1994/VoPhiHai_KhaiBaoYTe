@@ -1,9 +1,6 @@
 package org.VoPhiHai_MedicalNotify.configuration;
 
-import org.VoPhiHai_MedicalNotify.formatter.ExposureFormatter;
-import org.VoPhiHai_MedicalNotify.formatter.ProvinceFormatter;
-import org.VoPhiHai_MedicalNotify.formatter.SymptomFormatter;
-import org.VoPhiHai_MedicalNotify.formatter.WardFormatter;
+import org.VoPhiHai_MedicalNotify.formatter.*;
 import org.VoPhiHai_MedicalNotify.service.*;
 import org.VoPhiHai_MedicalNotify.service.impl.*;
 import org.springframework.beans.BeansException;
@@ -164,6 +161,8 @@ public class ApplicationConfig implements ApplicationContextAware, WebMvcConfigu
     @Override
     public void addFormatters(FormatterRegistry registry){
         registry.addFormatter(new ExposureFormatter(applicationContext.getBean(ExposureService.class)));
+        registry.addFormatter(new NationalFormatter(applicationContext.getBean(NationalService.class)));
+        registry.addFormatter(new PersonFormatter(applicationContext.getBean(PersonService.class)));
         registry.addFormatter(new ProvinceFormatter(applicationContext.getBean(ProvinceService.class)));
         registry.addFormatter(new SymptomFormatter(applicationContext.getBean(SymptomService.class)));
         registry.addFormatter(new WardFormatter(applicationContext.getBean(WardService.class)));

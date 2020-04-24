@@ -27,6 +27,26 @@ public class PersonServiceImpl implements PersonService {
     }
 
     @Override
+    public Person declare(Person person) {
+        Person personDeclared = this.findByLegalDocument(person.getLegalDocument());
+        if (personDeclared!= null)
+            return personDeclared;
+        else {
+            return this.create(person);
+        }
+    }
+
+    @Override
+    public Person declare(Person person, String declareName) {
+        Person personDeclared = this.findByLegalDocument(person.getLegalDocument());
+        if (personDeclared!= null)
+            return personDeclared;
+        else {
+            return this.create(person, declareName);
+        }
+    }
+
+    @Override
     public Person update(Person person, String updateBy) {
         if (this.findByLegalDocument(person.getLegalDocument()) != null){
             person.setUpdateAt(new Date());
