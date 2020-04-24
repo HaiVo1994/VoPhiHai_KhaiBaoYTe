@@ -18,7 +18,7 @@ public class Contact {
     private Person person;
 
     @ManyToOne(fetch = FetchType.EAGER)
-    private District district;
+    private Ward location;
     private String address;
     @Column(length = 20)
     private String phone;
@@ -66,12 +66,12 @@ public class Contact {
         this.person = person;
     }
 
-    public District getDistrict() {
-        return district;
+    public Ward getLocation() {
+        return location;
     }
 
-    public void setDistrict(District district) {
-        this.district = district;
+    public void setLocation(Ward location) {
+        this.location = location;
     }
 
     public String getAddress() {

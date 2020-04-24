@@ -6,22 +6,20 @@ import javax.persistence.*;
 import java.util.List;
 
 @Entity
-@Table(name = "district")
-public class District {
+@Table(name = "ward")
+public class Ward {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
     private String name;
-
     @ManyToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name = "idProvince")
-    private Province province;
-
-    @OneToMany(mappedBy = "district", fetch = FetchType.LAZY)
+    @JoinColumn(name = "idDistrict")
+    private District district;
+    @OneToMany(mappedBy = "location", fetch = FetchType.LAZY)
     @JsonIgnore
-    private List<Ward> wards;
+    private List<Contact> contacts;
 
-    public District() {
+    public Ward() {
     }
 
     public Long getId() {
@@ -40,19 +38,19 @@ public class District {
         this.name = name;
     }
 
-    public Province getProvince() {
-        return province;
+    public District getDistrict() {
+        return district;
     }
 
-    public void setProvince(Province province) {
-        this.province = province;
+    public void setDistrict(District district) {
+        this.district = district;
     }
 
-    public List<Ward> getWards() {
-        return wards;
+    public List<Contact> getContacts() {
+        return contacts;
     }
 
-    public void setWards(List<Ward> wards) {
-        this.wards = wards;
+    public void setContacts(List<Contact> contacts) {
+        this.contacts = contacts;
     }
 }
