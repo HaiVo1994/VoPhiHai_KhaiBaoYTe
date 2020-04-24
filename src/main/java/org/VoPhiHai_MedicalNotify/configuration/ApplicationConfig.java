@@ -1,5 +1,7 @@
 package org.VoPhiHai_MedicalNotify.configuration;
 
+import org.VoPhiHai_MedicalNotify.service.*;
+import org.VoPhiHai_MedicalNotify.service.impl.*;
 import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.ApplicationContext;
@@ -19,6 +21,7 @@ import org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean;
 import org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter;
 import org.springframework.transaction.PlatformTransactionManager;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.multipart.commons.CommonsMultipartResolver;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
@@ -93,7 +96,7 @@ public class ApplicationConfig implements ApplicationContextAware, WebMvcConfigu
     public LocalContainerEntityManagerFactoryBean entityManagerFactory(){
         LocalContainerEntityManagerFactoryBean entityManagerFactoryBean = new LocalContainerEntityManagerFactoryBean();
         entityManagerFactoryBean.setDataSource(dataSource());
-        entityManagerFactoryBean.setPackagesToScan(new String[]{"org.haivo_charity.model"});
+        entityManagerFactoryBean.setPackagesToScan(new String[]{"org.VoPhiHai_MedicalNotify.model"});
         JpaVendorAdapter vendorAdapter = new HibernateJpaVendorAdapter();
         entityManagerFactoryBean.setJpaVendorAdapter(vendorAdapter);
         entityManagerFactoryBean.setJpaProperties(additionalProperties());
@@ -139,12 +142,12 @@ public class ApplicationConfig implements ApplicationContextAware, WebMvcConfigu
         return properties;
     }
 
-    @Bean(name = "multipartResolver")
-    public CommonsMultipartResolver multipartResolver() {
-        CommonsMultipartResolver multipartResolver = new CommonsMultipartResolver();
-        multipartResolver.setMaxUploadSize(7 * 1024 * 1024);
-        return multipartResolver;
-    }
+//    @Bean(name = "multipartResolver")
+//    public CommonsMultipartResolver multipartResolver() {
+//        CommonsMultipartResolver multipartResolver = new CommonsMultipartResolver();
+//        multipartResolver.setMaxUploadSize(7 * 1024 * 1024);
+//        return multipartResolver;
+//    }
 
     @Bean
     public MessageSource messageSource() {
@@ -167,5 +170,62 @@ public class ApplicationConfig implements ApplicationContextAware, WebMvcConfigu
                 .addResourceLocations("/WEB-INF/js/");
         registry.addResourceHandler("/img/**")
                 .addResourceLocations("/WEB-INF/img/");
+    }
+
+    @Bean
+    public ContactService contactService(){
+        return new ContactServiceImpl();
+    }
+    @Bean
+    public DistrictService districtService(){
+        return new DistrictServiceImpl();
+    }
+    @Bean
+    public EntryService entryService(){
+        return new EntryServiceImpl();
+    }
+    @Bean
+    public ExposureService exposureService(){
+        return new ExposureServiceImpl();
+    }
+    @Bean
+    public GateService gateService(){
+        return new GateServiceImpl();
+    }
+    @Bean
+    public HistoryOfExposureService historyOfExposureService(){
+        return new HistoryOfExposureServiceImpl();
+    }
+    @Bean
+    public NationalService nationalService(){
+        return new NationalServiceImpl();
+    }
+    @Bean
+    public PersonService personService(){
+        return new PersonServiceImpl();
+    }
+    @Bean
+    public ProvinceService provinceService(){
+        return new ProvinceServiceImpl();
+    }
+    @Bean
+    public StatusService statusService(){
+        return new StatusServiceImpl();
+    }
+    @Bean
+    public SymptomService symptomService(){
+        return new SymptomServiceImpl();
+    }
+    @Bean
+    public TransportService transportService(){
+        return new TransportServiceImpl();
+    }
+    @Bean
+    public TransportTypeService transportTypeService(){
+        return new TransportTypeServiceIml();
+    }
+    @Bean
+    public WardService wardService(){
+        return new WardServiceImpl();
     }
 }
