@@ -10,5 +10,6 @@ public interface SymptomService {
     Iterable<Symptom> findAll();
     Symptom findById(Long id);
     List<Symptom> findAllEnable();
+    HashMap<String, Symptom> findMapEnable();
     List<HashMap<String, Long>> countPersonHaveSymptom(Date begin, Date end);
 }

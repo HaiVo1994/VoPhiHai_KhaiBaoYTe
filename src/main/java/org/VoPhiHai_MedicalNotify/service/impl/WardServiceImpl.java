@@ -35,6 +35,6 @@ public class WardServiceImpl implements WardService {
 
     @Override
     public Ward findById(Long id) {
-        return null;
+        return wardRepository.findById(id).orElse(null);
     }
 }

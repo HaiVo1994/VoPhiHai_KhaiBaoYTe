@@ -28,6 +28,16 @@ public class ExposureServiceImpl implements ExposureService {
     }
 
     @Override
+    public HashMap<String, Exposure> mapEnable() {
+        List<Exposure> exposures = this.findAllEnable();
+        HashMap<String, Exposure> mapExposure = new HashMap<>();
+        for (Exposure exposure: exposures){
+            mapExposure.put(String.valueOf(exposure.getId()), exposure);
+        }
+        return mapExposure;
+    }
+
+    @Override
     public List<HashMap<String, Long>> countPersonHaveExposure(Date begin, Date end) {
         return null;
     }

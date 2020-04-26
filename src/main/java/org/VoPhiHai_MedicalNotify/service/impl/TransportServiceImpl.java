@@ -54,6 +54,12 @@ public class TransportServiceImpl implements TransportService {
     }
 
     @Override
+    public List<Transport> findByType(Short idType) {
+        TransportType transportType = transportTypeService.findById(idType);
+        return transportRepository.findAllByTransportType(transportType);
+    }
+
+    @Override
     public List<HashMap<String, Long>> countPersonHaveSymptomInPlane(Date begin, Date end) {
         return null;
     }

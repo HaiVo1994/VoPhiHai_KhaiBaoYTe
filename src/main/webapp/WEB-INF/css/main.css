@@ -9,6 +9,7 @@ footer{
     width: 100%;
     color: floralwhite;
 }
+
 .inside{
     background-color: whitesmoke;
     padding-top: 2%;
@@ -21,6 +22,6 @@ h3{
     font-weight: bold;
     font-size: medium;
 }
-span{
+label span{
     color: red;
 }

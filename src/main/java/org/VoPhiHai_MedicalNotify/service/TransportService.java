@@ -13,6 +13,7 @@ public interface TransportService {
     Transport create(JsonObject transportJson);
     Transport findById(Long id);
     Transport findByTransportationNo(String transportationNo );
+    List<Transport> findByType(Short idType);
     List<HashMap<String, Long>> countPersonHaveSymptomInPlane(Date begin, Date end);
     List<HashMap<String, Long>> countPersonHaveExposureInPlane(Date begin, Date end);
     long countPeronHaveSymptomByTransportType(Date begin, Date end, Short transportTypeId);

@@ -29,6 +29,16 @@ public class SymptomServiceImpl implements SymptomService {
     }
 
     @Override
+    public HashMap<String, Symptom> findMapEnable() {
+        List<Symptom> symptoms = this.findAllEnable();
+        HashMap<String, Symptom> mapSymptom = new HashMap<>();
+        for (Symptom symptom: symptoms){
+            mapSymptom.put(String.valueOf(symptom.getId()),symptom);
+        }
+        return mapSymptom;
+    }
+
+    @Override
     public List<HashMap<String, Long>> countPersonHaveSymptom(Date begin, Date end) {
         return null;
     }

@@ -22,7 +22,15 @@ public class EntryServiceImpl implements EntryService {
 
     @Override
     public Entry create(Entry entry) {
-        entry.setCreateAt(new Date());
+        Date today = new Date();
+        entry.setCreateAt(today);
+        String id = entry.getId();
+        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy_MM_dd");
+
+        id += dateFormat.format(today);
+        entry.setId(id);
+        if (this.findById(id)!=null)
+            return null;
         return entryRepository.save(entry);
     }
 
@@ -43,14 +51,17 @@ public class EntryServiceImpl implements EntryService {
     @Override
     public Entry create(JsonObject jsonEntry) {
         String personId = (String) jsonEntry.get("person");
-        Long transportId = Long.parseLong((String) jsonEntry.get("transport"));
+//        Long transportId = Long.parseLong((String) jsonEntry.get("transport"));
         Person person = personService.findByLegalDocument(personId);
-        Transport transport = transportService.findById(transportId);
+        Transport transport = transportService.findById(
+                Long.parseLong((String) jsonEntry.get("transport"))
+        );
 
         if  ((person!=null) && (transport!=null)){
-            SimpleDateFormat dateFormat = new SimpleDateFormat();
+            SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
             try {
                 Entry entry = new Entry();
+                entry.setId(person.getLegalDocument() + "_");
                 entry.setGate(gateService.findById(Short.parseShort((String) jsonEntry.get("gate"))));
                 entry.setTransport(transport);
                 entry.setSeatNo((String) jsonEntry.get("seatNo"));
@@ -60,7 +71,9 @@ public class EntryServiceImpl implements EntryService {
                 entry.setImmigrationDate(dateFormat.parse(date));
                 entry.setPlaceTravel((String) jsonEntry.get("placeTravel"));
                 Province provinceDeparture =
-                        provinceService.findById(Integer.parseInt((String)jsonEntry.get("provinceDeparture")));
+                        provinceService.findById(
+                                Integer.parseInt((String)jsonEntry.get("provinceDeparture"))
+                        );
                 Province provinceDestination =
                         provinceService.findById(Integer.parseInt((String)jsonEntry.get("provinceDestination")));
 
@@ -68,7 +81,7 @@ public class EntryServiceImpl implements EntryService {
                 entry.setProvinceDestination(provinceDestination);
                 entry.setPerson(person);
                 entry.setListCure((String) jsonEntry.get("listCure"));
-                this.create(entry);
+                return this.create(entry);
             } catch (ParseException e) {
                 e.printStackTrace();
                 System.out.println("Lỗi Chuyển Đổi Ngày :");

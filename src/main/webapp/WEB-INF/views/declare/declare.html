@@ -30,17 +30,15 @@
                         <input type="text" class="form-control" id="person_legalDocument" maxlength="50">
                     </div>
                 </div>
-                <div class="row">
+                <div class="row" id="person-info">
                     <div class="form-group col-sm-12 col-md-8">
                         <label for="person_name">Họ tên <span>(*)</span></label>
                         <input type="text" class="form-control" id="person_name"
                                maxlength="200">
                     </div>
-                </div>
-                <div class="row">
                     <div class="form-group col-sm-12 col-md-4">
                         <label for="person_birthYear">Năm sinh <span>(*)</span></label>
-                        <select class="form-control" id="person_birthYear">
+                        <select class="form-control select_search" id="person_birthYear">
                         </select>
                     </div>
                     <div class="form-group col-sm-12 col-md-4">
@@ -126,9 +124,9 @@
                         <label for="entry_placeTravel">
                             Trong vòng 14 ngày qua, Anh/Chị có đến quốc gia/vùng lãnh thổ nào? <span>(*)</span>
                         </label>
-                        <select class="js-example-basic-multiple" name="states[]" multiple="multiple" id="entry_placeTravel">
+                        <select class="form-control select_search" name="states[]" multiple="multiple" id="entry_placeTravel">
                             <th:block th:each="national:${nationals}">
-                                <option th:value="${national.id}" th:text="${national.name}"></option>
+                                <option th:value="${national.name}" th:text="${national.name}"></option>
                             </th:block>
                         </select>
                     </div>
@@ -139,17 +137,17 @@
                     </div>
                     <div class="col-sm-12 col-lg-3 form-group">
                         <label for="contact_Province">Tỉnh <span>(*)</span></label>
-                        <select class="form-control" id="contact_Province">
+                        <select class="form-control select_search" id="contact_Province">
                         </select>
                     </div>
                     <div class="col-sm-12 col-lg-3 form-group">
                         <label for="contact_District">Quận / huyện <span>(*)</span></label>
-                        <select class="form-control" id="contact_District">
+                        <select class="form-control select_search" id="contact_District">
                         </select>
                     </div>
                     <div class="col-sm-12 col-lg-3 form-group">
                         <label for="contact_District">Phường / xã  <span>(*)</span></label>
-                        <select class="form-control" id="contact_Location">
+                        <select class="form-control select_search" id="contact_Location">
                         </select>
                     </div>
                     <div class="col-sm-12 form-group">
@@ -253,6 +251,7 @@
     <footer th:replace="layout::bottomBar"></footer>
     <th:block th:replace="layout::jsAll"></th:block>
     <script th:src="@{/js/web/declare.js}"></script>
+    <script th:src="@{/js/web/value.js}"></script>
     <script>
         $(document).ready(function () {
             var birth = $("#person_birthYear");
@@ -266,6 +265,7 @@
             birth.val(end-25);
 
             $(".select_search").select2();
+            $("#person-info").hide();
 
             declare.getProvince($("#national_Departure").val(), $("#entry_provinceDeparture"));
             declare.getProvince($("#national_destination").val(), $("#entry_provinceDestination"));
@@ -291,119 +291,10 @@
                 declare.getWard($(this).val(),$("#contact_Location"));
             }
         );
-        
-        function getEntry(transportId, personId) {
-            return {
-                "gate": $("#entry_gate").val(),
-                "transport": transportId,
-                "seatNo": $("#entry_seatNo").val(),
-                "departureDate": $("#entry_departureDate").val(),
-                "immigrationDate": $("#entry_immigrationDate").val(),
-                "placeTravel": $("#entry_placeTravel").val(),
-                "provinceDeparture": $("#entry_provinceDeparture").val(),
-                "provinceDestination": $("#entry_provinceDestination").val(),
-                "person": personId,
-                "contactHelpDeclare": null,
-                "statuses": null,
-                "listCure": $("#entry_listCure"),
-                "historyOfExposures": null
-            };
-        }
-        function getPerson() {
-            return {
-                "legalDocument": $("#person_legalDocument").val(),
-                "name": $("#person_name").val(),
-                "birthYear": $("#person_birthYear").val(),
-                "gender": $("#person_gender").val(),
-                "Nationality": {
-                    "id": $("#person_nationality").val()
-                }
-            };
-        }
-        function getContact() {
-            var namePersonEntry = $("#person_name").val();
-            return {
-                "name": namePersonEntry,
-                "person": null,
-                "location": {
-                    "id": $("#contact_Location").val()
-                },
-                "address": $("#contact_address").val(),
-                "phone": $("#contact_phone").val(),
-                "email": $("#contact_email").val(),
-                "create_by":namePersonEntry
-            };
-        }
-        function getTransport() {
-            return {
-                "transportType": $("#transportType").val(),
-                "transportationNo": $("#transport_transportationNo").val(),
-                "note": $("#transport_note").val()
-            };
-        }
-        function getStatuses() {
-            var length = 0,
-                idSymptom = 0,
-                checkSymptom = 0,
-                status = [];
-            $(".symptom_checkbox").map(
-                function( index ){
-                    if ($(this).prop("checked")){
-                        idSymptom = $(this).attr("name");
-                        checkSymptom = $(this).val();
-                        status.push(
-                            {
-                                "symptom":{
-                                    "id":idSymptom
-                                },
-                                "haveSymptom": checkSymptom
-                            }
-                        );
-                    }
-                    length = index;
-                }
-            );
-            if ( (length + 1) !== (status.length*2)){
-                console.log("Khai Báo Thiếu Tình Trạng Sức Khỏe: " + status.length + "/" + (length/2));
-                return null;
-            }
-            else{
-                console.log("Khai Báo Đủ Tình Trạng Sức Khỏe");
-                return status;
-            }
-        }
-        function getHistoryOfExposure() {
-            var length = 0,
-                idExposure = 0,
-                checkExposure = 0,
-                history_of_exposure = [];
-            $(".exposure_checkbox").map(
-                function( index ){
-                    if ($(this).prop("checked")){
-                        idExposure = $(this).attr("name");
-                        checkExposure = $(this).val();
-                        history_of_exposure.push(
-                            {
-                                "exposure":{
-                                    "id":idExposure
-                                },
-                                "hasExposure": checkExposure
-                            }
-                        );
-                    }
-                    length = index;
-                }
-            );
-            if ( (length + 1) !== (history_of_exposure.length*2)){
-                console.log("Khai Báo Thiếu Lịch Sử Phơi Nhiễm:" + history_of_exposure.length + "/" + (length/2));
-                return null;
-            }
-            else{
-                console.log("Khai Báo Đủ Lịch Sử Phơi Nhiễm");
-                return history_of_exposure;
-            }
-        }
 
+        function healthDeclaration() {
+            declare.createPerSon();
+        }
     </script>
 </body>
 </html>

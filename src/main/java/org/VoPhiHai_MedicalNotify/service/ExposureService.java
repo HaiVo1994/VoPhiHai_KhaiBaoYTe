@@ -10,5 +10,6 @@ public interface ExposureService {
     Iterable<Exposure> findAll();
     Exposure findById(Long id);
     List<Exposure> findAllEnable();
+    HashMap<String, Exposure> mapEnable();
     List<HashMap<String, Long>> countPersonHaveExposure(Date begin, Date end);
 }
