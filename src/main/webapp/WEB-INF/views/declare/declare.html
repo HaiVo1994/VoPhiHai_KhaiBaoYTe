@@ -190,11 +190,11 @@
                                         </td>
                                         <td>
                                             <input type="radio" class="form-check-input symptom_checkbox"
-                                                th:name="${symptom.id}" value="1">
+                                                th:name="${'symptom:' + symptom.id}" th:value="${symptom.id + ',:,1'}">
                                         </td>
                                         <td>
                                             <input type="radio" class="form-check-input symptom_checkbox"
-                                                   th:name="${symptom.id}" value="0">
+                                                   th:name="${'symptom:' + symptom.id}" th:value="${symptom.id + ',:,0'}">
                                         </td>
                                     </tr>
                                 </tbody>
@@ -226,11 +226,11 @@
                                     </td>
                                     <td>
                                         <input type="radio" class="form-check-input exposure_checkbox"
-                                               th:name="${exposure.id}" value="1">
+                                               th:name="${'exposure:' + exposure.id}" th:value="${exposure.id + ',:,1'}">
                                     </td>
                                     <td>
                                         <input type="radio" class="form-check-input exposure_checkbox"
-                                               th:name="${exposure.id}" value="0">
+                                               th:name="${'exposure:' + exposure.id}" th:value="${exposure.id + ',:,0'}">
                                     </td>
                                 </tr>
                                 </tbody>

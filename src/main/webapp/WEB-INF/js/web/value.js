@@ -59,20 +59,16 @@ value.getTransport = function() {
 }
 value.getStatuses = function() {
     var length = 0,
-        idSymptom = 0,
-        checkSymptom = 0,
+        split = [],
         status = [];
     $(".symptom_checkbox").map(
         function( index ){
             if ($(this).prop("checked")){
-                idSymptom = $(this).attr("name");
-                checkSymptom = $(this).val();
-                status.push(
-                    {
-                        "symptom": idSymptom,
-                        "haveSymptom": checkSymptom
-                    }
-                );
+                split = $(this).val().split(",:,");
+                status.push({
+                    "symptom": split[0],
+                    "haveSymptom": split[1]
+                });
             }
             length = index;
         }
@@ -88,20 +84,17 @@ value.getStatuses = function() {
 }
 value.getHistoryOfExposure = function() {
     var length = 0,
-        idExposure = 0,
-        checkExposure = 0,
+        split = [],
         history_of_exposure = [];
     $(".exposure_checkbox").map(
         function( index ){
             if ($(this).prop("checked")){
-                idExposure = $(this).attr("name");
-                checkExposure = $(this).val();
-                history_of_exposure.push(
-                    {
-                        "exposure":idExposure,
-                        "hasExposure": checkExposure
-                    }
-                );
+                split = $(this).val().split(",:,");
+                history_of_exposure.push({
+                    "exposure": split[0],
+                    "hasExposure": split[1]
+
+                });
             }
             length = index;
         }

@@ -50,10 +50,17 @@ public class HistoryOfExposureServiceImpl implements HistoryOfExposureService {
         if (entry!=null){
             HistoryOfExposure historyOfExposure;
             HashMap<String, Exposure> mapExposure = exposureService.mapEnable();
+            String checkExposure;
             for (JsonObject history: historyOfExposures){
                 historyOfExposure = new HistoryOfExposure();
                 historyOfExposure.setDateDeclare(current);
-                historyOfExposure.setHasExposure((boolean) history.get("hasExposure"));
+                checkExposure = String.valueOf(history.get("hasExposure"));
+                if (checkExposure.equals("1")){
+                    historyOfExposure.setHasExposure(true);
+                }
+                else {
+                    historyOfExposure.setHasExposure(false);
+                }
                 this.create(historyOfExposure, entry, mapExposure.get(String.valueOf(history.get("exposure"))));
             }
         }

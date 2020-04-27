@@ -50,12 +50,19 @@ public class StatusServiceImpl implements StatusService {
         Entry entry = entryService.findById(entryId);
         if (entry!=null){
             Status status;
+            String hasSymptom;
             for (JsonObject jsonObject: statusJson){
                 status = new Status();
                 status.setDateDeclare(current);
                 status.setEntry(entry);
                 status.setSymptom(mapSymptom.get((String.valueOf(jsonObject.get("symptom")))));
-                status.setHaveSymptom((boolean)jsonObject.get("haveSymptom"));
+                hasSymptom = String.valueOf(jsonObject.get("haveSymptom"));
+                if (hasSymptom.equals("1")){
+                    status.setHaveSymptom(true);
+                }
+                else
+                    status.setHaveSymptom(false);
+//                status.setHaveSymptom((boolean));
                 this.create(status);
             }
         }

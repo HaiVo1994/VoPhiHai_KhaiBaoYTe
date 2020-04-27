@@ -82,6 +82,7 @@ public class ContactServiceImpl implements ContactService {
             contact.setEmail(String.valueOf(jsonContact.get("email")));
             contact.setEnabled(true);
             contact.setCreate_by(String.valueOf(jsonContact.get("create_by")));
+            contact.setPerson(person);
             return this.change(contact, person);
         }
         return null;

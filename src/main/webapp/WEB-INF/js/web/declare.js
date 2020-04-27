@@ -148,7 +148,7 @@ declare.createPerSon = function () {
         data: JSON.stringify(person)
     }).done(
         function (data) {
-            var idPerson = data.passport;
+            var idPerson = data.passport + "";
             declare.createContact(idPerson);
             declare.createTransport(idPerson);
             console.log(idPerson);
