@@ -21,7 +21,7 @@ declare.getProvince = function(nationalId, provinceSelect) {
 declare.getProvinceForLocation = function(provinceSelect, districtSelect, wardSelect) {
     $.ajax(
         {
-            url: urlRoot + "location/province/" + vietNamId ,
+            url: urlRoot + "location/province/" + vietnamId ,
             method: 'GET',
             dataType: 'json',
             contentType: 'application/json'
@@ -98,7 +98,9 @@ declare.getWard = function(districtId, wardSelect) {
     });
 }
 
-declare.checkPassport = function (passport, infoInput) {
+declare.checkPassport = function (passport, messengerLocation) {
+    var infoInput = $("#person-info"),
+        check = true;
     $.ajax(
         {
             url: urlRoot + "person/check/" + passport ,
@@ -109,12 +111,23 @@ declare.checkPassport = function (passport, infoInput) {
     ).done(
         function (data) {
             infoInput.hide();
+            messengerLocation.html("<p>Mã " + data.personId + "Đã Có Trong Hệ Thống </p>")
+            messengerLocation.append("<p>Bạn Không Cần Phải Nhập Thông Tin Cá Nhân</p>");
+            $("#person_name").rules("remove", "required");
+            declare.result_passport = true;
         }
     ).fail(
         function () {
+            messengerLocation.html("");
+            $("#person_name").rules("add",
+                {
+                    required:true
+                });
             infoInput.show();
+            declare.result_passport = false;
         }
     );
+    return check;
 }
 
 // declare.getTransportNo = function (transportNo, transportNoInput) {
@@ -137,7 +150,274 @@ declare.checkPassport = function (passport, infoInput) {
 //         }
 //     );
 // }
+// declare.checkDataEntered = function(checkPassport){
+//     var check = true,
+//         messengerError = "<h4>Vui lòng</h4>",
+//         foundPassport = false;
+//     if($("#entry_gate").val()==""){
+//         messengerError += "<p>Chọn cửa khẩu</p>";
+//         check = false;
+//     }
+//     var passport = $("#person_legalDocument").val();
+//     if (passport==null){
+//         messengerError += "<p>Nhập số hộ chiếu hoặc giấy thông hành hợp pháp khác</p>";
+//         check = false;
+//     }
+//     else {
+//         if (!checkPassport){
+//             foundPassport = declare.checkPassport(passport,$("#passport_messenger"));
+//         }
+//         else {
+//             foundPassport = true;
+//         }
+//     }
+//     if (!foundPassport){
+//         if ($("#person_name").val() === ""){
+//             messengerError += "<p>Nhập họ tên</p>";
+//             check = false;
+//         }
+//         if ($("#person_birthYear").val() === ""){
+//             messengerError += "<p>Chọn năm sinh</p>";
+//             check = false;
+//         }
+//         if ($("#person_gender").val() === ""){
+//             messengerError += "<p>Chọn giới tính</p>";
+//             check = false;
+//         }
+//         if ($("#person_nationality").val() === ""){
+//             messengerError += "<p>Chọn quốc tịch</p>";
+//             check = false;
+//         }
+//     }
+//
+//     var typeTransport = $("#transportType").val();
+//     if (typeTransport == flyTypeId){
+//         if ($("#transport_transportationNo").val()==null){
+//             messengerError += "<p>Nhập số hiệu của máy bay</p>";
+//             check = false;
+//         }
+//         if ($("#entry_seatNo").val()==null){
+//             messengerError += "<p>Nhập số ghế của bạn trên máy bay</p>";
+//             check = false;
+//         }
+//     }
+//
+//     if ($("#entry_departureDate").val() == ""){
+//         messengerError += "<p>Nhập ngày khởi hành</p>";
+//         check = false;
+//     }
+//     if ($("#entry_departureDate").val() == ""){
+//         messengerError += "<p>Nhập ngày nhập cảnh</p>";
+//         check = false;
+//     }
+//
+//     if ($("#entry_provinceDeparture").val() == ""){
+//         messengerError += "<p>Chọn địa điểm khởi hành</p>";
+//         check = false;
+//     }
+//     if ($("#national_destination").val() == ""){
+//         messengerError += "<p>Chọn địa điểm nơi đến </p>";
+//         check = false;
+//     }
+//
+//     if ($("#entry_placeTravel").val() == ""){
+//         messengerError += "<p>Nhập những nơi bạn đã đi qua gần đây </p>";
+//         check = false;
+//     }
+//     if ($("#contact_Location").val() == ""){
+//         messengerError += "<p>Nhập địa chỉ liên lạc của bạn tại Việt Nam </p>";
+//         check = false;
+//     }
+//     else {
+//         if ($("#contact_address").val() == ""){
+//             messengerError += "<p>Nhập địa chỉ liên lạc của bạn tại Việt Nam </p>";
+//             check = false;
+//         }
+//     }
+//     if ($("#contact_phone").val() == ""){
+//         messengerError += "<p>Nhập số điện thoại của bạn tại Việt Nam </p>";
+//         check = false;
+//     }
+//
+//     if (value.getStatuses()==null){
+//         messengerError += "<p>Hoàn thành khảo sát sức khỏe </p>";
+//         check = false;
+//     }
+//     if (value.getHistoryOfExposure()==null){
+//         messengerError += "<p>Hoàn thành khảo sát lây nhiễm </p>";
+//         check = false;
+//     }
+//
+//     if (!check){
+//         $("#modal_messenger_error").html(messengerError);
+//         $("#messengerErrorModal").modal("show");
+//     }
+//     return check;
+// }
 
+declare.setValidate = function(){
+    $("#formDeclare").validate();
+    $("#person_legalDocument").rules("add",
+        {
+            required: true,
+            maxlength: 30,
+            minlength: 5,
+            messages:{
+                required: "Nhập số hộ chiếu hoặc giấy thông hành hợp pháp khác",
+                maxlength: "Quá dài, bạn chắc bạn đang nhập thông tin thông hành chứ?",
+                minlength: "Bạn đang nhập số nhà phải không? Vì nó ngắn quá"
+            }
+        }
+        );
+    $("#person_name").rules("add",
+        {
+            required:true,
+            maxlength: 200,
+            messages: {
+                required: "Bạn phải nhập tên của mình",
+                maxlength:"Tên của bạn quá dài, vui lòng rút gọn lại"
+            }
+        }
+        );
+    $("#transport_transportationNo").rules("add",
+        {
+            required: true,
+            maxlength: 72,
+            messages: {
+                required: "Vui lòng nhập mã chuyến bay của bạn",
+                maxlength: "Hãy xem lại mã số chuyến bay"
+            }
+        }
+        );
+    $("#entry_seatNo").rules("add",
+        {
+            required:true,
+           maxlength:32,
+           messages:{
+               required: "Vui lòng nhập số ghế của bạn",
+               maxlength: "Hãy nhập đúng số ghế của bạn"
+           }
+        });
+
+    jQuery.validator.addMethod("startDate",
+        function (value, element, params) {
+            if (!/Invalid|NaN/.test(new Date(value))) {
+                return new Date(value) <= new Date($(params).val());
+            }
+            return isNaN(value) && isNaN($(params).val())
+                || (Number(value) <= Number($(params).val()));
+        },"Ngày xuất phát phải trước hoặc giống ngày nhập cảnh");
+    $("#entry_departureDate").rules("add",
+        {
+            required:true,
+            startDate: $("#entry_immigrationDate"),
+            messages:{
+                required: "Bạn phải nhập ngày xuất phát",
+                startDate: "Ngày xuất phát phải trước hoặc giống ngày nhập cảnh"
+            }
+        });
+
+    jQuery.validator.addMethod("endDate",
+        function (value, element) {
+            var today = new Date();
+            if (!/Invalid|NaN/.test(new Date(value))) {
+                return new Date(value) <= today;
+            }
+            return isNaN(value) || (Number(value) > Number(today));
+        },"Ngày nhập cảnh phải là ngày hôm nay hoặc trước đó");
+    $("#entry_immigrationDate").rules("add",
+        {
+            required:true,
+            endDate: true,
+            messages:{
+                required: "Bạn phải nhập ngày nhập cảnh",
+                endDate: "Ngày nhập cảnh phải là ngày hôm nay hoặc trước đó"
+            }
+        }
+        );
+    $("#contact_address").rules("add",
+        {
+            required: true,
+            maxlength: 240,
+            messages:{
+                required: "Để tiện liên lạc, vui lòng nhập địa chỉ",
+                maxlength: "Vui lòng rút gọn địa chỉ"
+            }
+        }
+        );
+    jQuery.validator.addMethod("phoneNumber",
+        function (value, element) {
+            return phoneReg.test(value);
+        },"Vui lòng nhập số điện thoại ở Việt Nam");
+    $("#contact_phone").rules("add",
+        {
+            required: true,
+            number: true,
+            minlength: 10,
+            maxlength: 11,
+            // phoneNumber: true,
+            messages:{
+                required: "Vui Lòng Nhập Số Điện Thoại",
+                number: "Số điện thoại chỉ chứa số",
+                minlength: "Số điện thoại chỉ có 10-11 số",
+                maxlength: "Số điện thoại chỉ có 10-11 số",
+                // phoneNumber: "Vui lòng nhập số điện thoại ở Việt Nam"
+            }
+        }
+        );
+    $("#contact_email").rules("add",
+        {
+            required: true,
+            email:true,
+            messages:{
+                required: "Vui lòng nhập email",
+                email: "Email sai, vui lòng nhập lại"
+            }
+        }
+        );
+
+}
+declare.result_passport = false;
+declare.dataValidate = function(){
+    var passportInput = $("#person_legalDocument");
+    if (passportInput.valid()) {
+        var check = true;
+        if (!declare.result_passport) {
+            declare.result_passport = declare.checkPassport(passportInput.val(), $("#passport_messenger"));
+            // check = $("#person_name").valid();
+        }
+        var tranportNo = $("#transport_transportationNo"),
+            seatNo = $("#entry_seatNo");
+        if ($("#transportType").val() != flyTypeId) {
+            // check = tranportNo.valid() && seatNo.valid();
+            tranportNo.rules("remove", "required");
+            seatNo.rules("remove", "required");
+        }
+
+        if ($("#formDeclare").valid()) {
+            var messengerError = "Vui Lòng";
+            if (value.getStatuses() == null) {
+                messengerError += "<p>Hoàn thành khảo sát sức khỏe </p>";
+                check = false;
+            }
+            if (value.getHistoryOfExposure() == null) {
+                messengerError += "<p>Hoàn thành khảo sát lây nhiễm </p>";
+                check = false;
+            }
+
+            if (!check) {
+                $("#modal_messenger_error").html(messengerError);
+                $("#messengerErrorModal").modal("show");
+            }
+            else {
+                declare.createPerSon();
+            }
+        } else {
+            console.log("Form sai");
+            form.errors();
+        }
+    }
+}
 declare.createPerSon = function () {
     var person = value.getPerson();
     $.ajax({
@@ -197,6 +477,8 @@ declare.createEntry = function (idTransport, idPerson) {
             console.log(data.messenger);
             declare.entryStatus(idEntry);
             declare.entryExposure(idEntry);
+            // $("#messengerResult").html("Bạn Đã Hoàn Thành Việc Khai Báo Y Tế");
+            $("#messengerSuccess").modal("show");
         }
     );
 }

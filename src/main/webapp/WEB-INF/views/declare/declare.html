@@ -9,235 +9,265 @@
     <nav th:replace="layout::topBar"></nav>
     <div class="container">
         <div class="container-fluid inside">
-            <div class="row align-items-center">
+            <div class="text-center">
+                <h2 id="messengerResult">
+
+                </h2>
+            </div>
+            <div class="row text-center">
                 <h3>Tờ khai y tế</h3>
             </div>
             <div class="container-fluid">
-                <div class="row">
-                    <div class="form-group col-sm-12 col-lg-8">
-                        <label for="entry_gate">Cửa khẩu <span>(*)</span></label>
-                        <select class="form-control select_search" id="entry_gate">
-                            <th:block th:each="gate:${gates}">
-                                <option th:value="${gate.id}" th:text="${gate.name}"></option>
-                            </th:block>
+                <form id="formDeclare" method="post">
+                    <div class="row">
+                        <div class="form-group col-sm-12 col-lg-8">
+                            <label for="entry_gate">Cửa khẩu <span>(*)</span></label>
+                            <select class="form-control select_search" name="entry_gate" id="entry_gate">
+                                <th:block th:each="gate:${gates}">
+                                    <option th:value="${gate.id}" th:text="${gate.name}"></option>
+                                </th:block>
 
-                        </select>
+                            </select>
+                        </div>
                     </div>
-                </div>
-                <div class="row">
-                    <div class="form-group col-sm-12 col-md-8">
-                        <label for="person_legalDocument">Số hộ chiếu hoặc giấy thông hành hợp pháp khác <span>(*)</span></label>
-                        <input type="text" class="form-control" id="person_legalDocument" maxlength="50">
-                    </div>
-                </div>
-                <div class="row" id="person-info">
-                    <div class="form-group col-sm-12 col-md-8">
-                        <label for="person_name">Họ tên <span>(*)</span></label>
-                        <input type="text" class="form-control" id="person_name"
-                               maxlength="200">
-                    </div>
-                    <div class="form-group col-sm-12 col-md-4">
-                        <label for="person_birthYear">Năm sinh <span>(*)</span></label>
-                        <select class="form-control select_search" id="person_birthYear">
-                        </select>
-                    </div>
-                    <div class="form-group col-sm-12 col-md-4">
-                        <label for="person_gender">Giới tính <span>(*)</span></label>
-                        <select class="form-control" id="person_gender">
-                            <option value="0">Nam</option>
-                            <option value="1">Nữ</option>
-                            <option value="2">Khác</option>
-                        </select>
-                    </div>
-                    <div class="form-group col-sm-12 col-md-4">
-                        <label for="person_nationality">Quốc tịch <span>(*)</span></label>
-                        <select class="form-control select_search" id="person_nationality" >
-                            <th:block th:each="nationality:${nationals}">
-                                <option th:value="${nationality.id}" th:text="${nationality.name}"></option>
-                            </th:block>
-                        </select>
-                    </div>
-                </div>
+                    <div class="row">
+                        <div class="form-group col-sm-12 col-md-8">
+                            <label for="person_legalDocument">Số hộ chiếu hoặc giấy thông hành hợp pháp khác <span>(*)</span></label>
+                            <input type="text" class="form-control" name="person_legalDocument"
+                                   id="person_legalDocument" maxlength="50">
+                        </div>
+                        <div class="form-group col-sm-6 col-md-2">
+                            <button type="button" class="btn btn-info" onclick="checkPassport()">Kiểm Tra Hộ Chiếu</button>
+                        </div>
+                        <div class="form-group col-sm-6 col-md-2" id="passport_messenger">
 
-                <div class="row">
-                    <div class="form-group">
-                        <label for="transportType">Phương tiện <span>(*)</span></label>
-                        <select class="form-control" id="transportType">
-                            <th:block th:each="transportType:${transportTypes}">
-                                <option th:value="${transportType.id}" th:text="${transportType.name}"></option>
-                            </th:block>
-                        </select>
+                        </div>
                     </div>
-                    <div class="form-group col-sm-12">
-                        <label for="transport_note">Ghi chú (Cho phương tiện di chuyển)</label>
-                        <textarea type="text" class="form-control" id="transport_note"></textarea>
+                    <div class="row" id="person-info">
+                        <div class="form-group col-sm-12 col-md-8">
+                            <label for="person_name">Họ tên <span>(*)</span></label>
+                            <input type="text" class="form-control" name="person_name"
+                                   id="person_name" maxlength="200">
+                        </div>
+                        <div class="form-group col-sm-12 col-md-4">
+                            <label for="person_birthYear">Năm sinh <span>(*)</span></label>
+                            <select class="form-control select_search" name="person_birthYear" id="person_birthYear">
+                            </select>
+                        </div>
+                        <div class="form-group col-sm-12 col-md-4">
+                            <label for="person_gender">Giới tính <span>(*)</span></label>
+                            <select class="form-control" name="person_gender" id="person_gender">
+                                <option value="0">Nam</option>
+                                <option value="1">Nữ</option>
+                                <option value="2">Khác</option>
+                            </select>
+                        </div>
+                        <div class="form-group col-sm-12 col-md-4">
+                            <label for="person_nationality">Quốc tịch <span>(*)</span></label>
+                            <select class="form-control select_search" id="person_nationality" >
+                                <th:block th:each="nationality:${nationals}">
+                                    <option th:value="${nationality.id}" th:text="${nationality.name}"></option>
+                                </th:block>
+                            </select>
+                        </div>
                     </div>
-                    <div class="form-group col-sm-12 col-lg-6">
-                        <label for="transport_transportationNo">Số hiệu phương tiện</label>
-                        <input type="text" class="form-control" id="transport_transportationNo" maxlength="72">
+
+                    <div class="row">
+                        <div class="form-group">
+                            <label for="transportType">Phương tiện <span>(*)</span></label>
+                            <select class="form-control" name="transportType" id="transportType">
+                                <th:block th:each="transportType:${transportTypes}">
+                                    <option th:value="${transportType.id}" th:text="${transportType.name}"></option>
+                                </th:block>
+                            </select>
+                        </div>
+                        <div class="form-group col-sm-12">
+                            <label for="transport_note">Ghi chú (Cho phương tiện di chuyển)</label>
+                            <textarea type="text" class="form-control" name="transport_note" id="transport_note"></textarea>
+                        </div>
+                        <div class="form-group col-sm-12 col-lg-6">
+                            <label for="transport_transportationNo">Số hiệu phương tiện</label>
+                            <input type="text" class="form-control"
+                                   name="transport_transportationNo" id="transport_transportationNo" maxlength="72">
+                        </div>
+                        <div class="form-group col-sm-12 col-lg-6">
+                            <label for="entry_seatNo">Số ghế</label>
+                            <input type="text" class="form-control"
+                                   name="entry_seatNo" id="entry_seatNo" maxlength="32">
+                        </div>
+                        <div class="form-group col-sm-12 col-lg-6">
+                            <label for="entry_departureDate">Ngày khởi hành <span>(*)</span></label>
+                            <input type="date" class="form-control"
+                                   name="entry_departureDate" id="entry_departureDate">
+                        </div>
+                        <div class="form-group col-sm-12 col-lg-6">
+                            <label for="entry_immigrationDate">Ngày nhập cảnh <span>(*)</span></label>
+                            <input type="date" class="form-control"
+                                   name="entry_immigrationDate" id="entry_immigrationDate">
+                        </div>
+                        <div class="col-sm-12">
+                            <p>Địa điểm khởi hành (tỉnh/quốc gia)</p>
+                        </div>
+                        <div class="form-group col-sm-6">
+                            <label for="national_Departure">Quốc gia/ Vùng lãnh thổ <span>(*)</span></label>
+                            <select class="form-control select_search"
+                                    name="national_Departure" id="national_Departure">
+                                <th:block th:each="national:${nationals}">
+                                    <option th:value="${national.id}" th:text="${national.name}"></option>
+                                </th:block>
+                            </select>
+                        </div>
+                        <div class="form-group col-sm-6">
+                            <label for="entry_provinceDeparture">Tỉnh <span>(*)</span></label>
+                            <select class="form-control select_search"
+                                    name="entry_provinceDeparture" id="entry_provinceDeparture">
+                            </select>
+                        </div>
+                        <div class="col-sm-12">
+                            <p>Địa điểm nơi đến (tỉnh/quốc gia)</p>
+                        </div>
+                        <div class="form-group col-sm-6">
+                            <label for="national_destination">Quốc gia/ Vùng lãnh thổ <span>(*)</span></label>
+                            <select class="form-control select_search"
+                                    name="national_destination" id="national_destination">
+                                <th:block th:each="national:${nationals}">
+                                    <option th:value="${national.id}" th:text="${national.name}"></option>
+                                </th:block>
+                            </select>
+                        </div>
+                        <div class="form-group col-sm-6">
+                            <label for="entry_provinceDestination">Tỉnh <span>(*)</span></label>
+                            <select class="form-control select_search"
+                                    name="entry_provinceDestination" id="entry_provinceDestination">
+                            </select>
+                        </div>
+                        <div class="col-sm-12">
+                            <label for="entry_placeTravel">
+                                Trong vòng 14 ngày qua, Anh/Chị có đến quốc gia/vùng lãnh thổ nào? <span>(*)</span>
+                            </label>
+                            <select class="form-control select_search"
+                                    name="entry_placeTravel[]" multiple="multiple" id="entry_placeTravel">
+                                <th:block th:each="national:${nationals}">
+                                    <option th:value="${national.name}" th:text="${national.name}"></option>
+                                </th:block>
+                            </select>
+                        </div>
                     </div>
-                    <div class="form-group col-sm-12 col-lg-6">
-                        <label for="entry_seatNo">Số ghế</label>
-                        <input type="text" class="form-control" id="entry_seatNo" maxlength="32">
+                    <div class="row">
+                        <div class="col-sm-12">
+                            <p class="declare_tittle">Địa chỉ liên lạc tại Việt Nam<p>
+                        </div>
+                        <div class="col-sm-12 col-lg-3 form-group">
+                            <label for="contact_Province">Tỉnh <span>(*)</span></label>
+                            <select class="form-control select_search"
+                                    name="contact_Province" id="contact_Province">
+                            </select>
+                        </div>
+                        <div class="col-sm-12 col-lg-3 form-group">
+                            <label for="contact_District">Quận / huyện <span>(*)</span></label>
+                            <select class="form-control select_search"
+                                    name="contact_District" id="contact_District">
+                            </select>
+                        </div>
+                        <div class="col-sm-12 col-lg-3 form-group">
+                            <label for="contact_District">Phường / xã  <span>(*)</span></label>
+                            <select class="form-control select_search"
+                                    name="contact_Location" id="contact_Location">
+                            </select>
+                        </div>
+                        <div class="col-sm-12 form-group">
+                            <label for="contact_address">
+                                Địa chỉ nơi ở tại Việt Nam <span>(*)</span>
+                            </label>
+                            <textarea type="text" class="form-control"
+                                      name="contact_address" id="contact_address" maxlength="240"></textarea>
+                        </div>
+                        <div class="col-sm-12">
+                            <small>
+                                Số điện thoại bạn sẽ sử dụng tại Việt Nam (Là số Roaming hoặc số Việt Nam)
+                            </small>
+                        </div>
+                        <div class="col-sm-12 col-lg-6">
+                            <label for="contact_phone">Điện thoại <span>(*)</span></label>
+                            <input type="tel" class="form-control"
+                                   name="contact_phone" id="contact_phone">
+                        </div>
+                        <div class="col-sm-12 col-lg-6">
+                            <label for="contact_email">Email </label>
+                            <input type="email" class="form-control"
+                                   name="contact_email" id="contact_email">
+                        </div>
                     </div>
-                    <div class="form-group col-sm-12 col-lg-6">
-                        <label for="entry_departureDate">Ngày khởi hành <span>(*)</span></label>
-                        <input type="date" class="form-control" id="entry_departureDate">
-                    </div>
-                    <div class="form-group col-sm-12 col-lg-6">
-                        <label for="entry_immigrationDate">Ngày nhập cảnh <span>(*)</span></label>
-                        <input type="date" class="form-control" id="entry_immigrationDate">
-                    </div>
-                    <div class="col-sm-12">
-                        <p>Địa điểm khởi hành (tỉnh/quốc gia)</p>
-                    </div>
-                    <div class="form-group col-sm-6">
-                        <label for="national_Departure">Quốc gia/ Vùng lãnh thổ <span>(*)</span></label>
-                        <select class="form-control select_search" id="national_Departure">
-                            <th:block th:each="national:${nationals}">
-                                <option th:value="${national.id}" th:text="${national.name}"></option>
-                            </th:block>
-                        </select>
-                    </div>
-                    <div class="form-group col-sm-6">
-                        <label for="entry_provinceDeparture">Tỉnh <span>(*)</span></label>
-                        <select class="form-control select_search" id="entry_provinceDeparture">
-                        </select>
-                    </div>
-                    <div class="col-sm-12">
-                        <p>Địa điểm nơi đến (tỉnh/quốc gia)</p>
-                    </div>
-                    <div class="form-group col-sm-6">
-                        <label for="national_destination">Quốc gia/ Vùng lãnh thổ <span>(*)</span></label>
-                        <select class="form-control select_search" id="national_destination">
-                            <th:block th:each="national:${nationals}">
-                                <option th:value="${national.id}" th:text="${national.name}"></option>
-                            </th:block>
-                        </select>
-                    </div>
-                    <div class="form-group col-sm-6">
-                        <label for="entry_provinceDestination">Tỉnh <span>(*)</span></label>
-                        <select class="form-control select_search" id="entry_provinceDestination">
-                        </select>
-                    </div>
-                    <div class="col-sm-12">
-                        <label for="entry_placeTravel">
-                            Trong vòng 14 ngày qua, Anh/Chị có đến quốc gia/vùng lãnh thổ nào? <span>(*)</span>
-                        </label>
-                        <select class="form-control select_search" name="states[]" multiple="multiple" id="entry_placeTravel">
-                            <th:block th:each="national:${nationals}">
-                                <option th:value="${national.name}" th:text="${national.name}"></option>
-                            </th:block>
-                        </select>
-                    </div>
-                </div>
-                <div class="row">
-                    <div class="col-sm-12">
-                        <p class="declare_tittle">Địa chỉ liên lạc tại Việt Nam<p>
-                    </div>
-                    <div class="col-sm-12 col-lg-3 form-group">
-                        <label for="contact_Province">Tỉnh <span>(*)</span></label>
-                        <select class="form-control select_search" id="contact_Province">
-                        </select>
-                    </div>
-                    <div class="col-sm-12 col-lg-3 form-group">
-                        <label for="contact_District">Quận / huyện <span>(*)</span></label>
-                        <select class="form-control select_search" id="contact_District">
-                        </select>
-                    </div>
-                    <div class="col-sm-12 col-lg-3 form-group">
-                        <label for="contact_District">Phường / xã  <span>(*)</span></label>
-                        <select class="form-control select_search" id="contact_Location">
-                        </select>
-                    </div>
-                    <div class="col-sm-12 form-group">
-                        <label for="contact_address">
-                            Địa chỉ nơi ở tại Việt Nam <span>(*)</span>
-                        </label>
-                        <textarea type="text" class="form-control" id="contact_address" maxlength="240"></textarea>
-                    </div>
-                    <div class="col-sm-12">
-                        <small>
-                            Số điện thoại bạn sẽ sử dụng tại Việt Nam (Là số Roaming hoặc số Việt Nam)
-                        </small>
-                    </div>
-                    <div class="col-sm-12 col-lg-6">
-                        <label for="contact_phone">Điện thoại <span>(*)</span></label>
-                        <input type="tel" class="form-control" id="contact_phone">
-                    </div>
-                    <div class="col-sm-12 col-lg-6">
-                        <label for="contact_email">Email </label>
-                        <input type="email" class="form-control" id="contact_email">
-                    </div>
-                </div>
-                <div class="row">
-                    <div class="col-sm-12">
-                        <p class="declare_tittle">
-                            Trong vòng 14 ngày (tính đến thời điểm làm thủ tục xuất cảnh, nhập cảnh, quá cảnh) Anh/Chị có thấy xuất hiện dấu hiệu nào sau đây không? (*)
-                        <p>
-                        <div class="table-responsive">
-                            <table class="table">
-                                <thead>
+                    <div class="row">
+                        <div class="col-sm-12">
+                            <p class="declare_tittle">
+                                Trong vòng 14 ngày (tính đến thời điểm làm thủ tục xuất cảnh, nhập cảnh, quá cảnh) Anh/Chị có thấy xuất hiện dấu hiệu nào sau đây không? (*)
+                            <p>
+                            <div class="table-responsive">
+                                <table class="table">
+                                    <thead>
                                     <tr>
                                         <th style="width: 80%">Triệu chứng</th>
                                         <th style="width: 10%">Có</th>
                                         <th style="width: 10%">Không</th>
                                     </tr>
-                                </thead>
-                                <tbody>
+                                    </thead>
+                                    <tbody>
                                     <tr th:each="symptom:${symptoms}">
                                         <td th:text="${symptom.name}">
                                         </td>
                                         <td>
                                             <input type="radio" class="form-check-input symptom_checkbox"
-                                                th:name="${'symptom:' + symptom.id}" th:value="${symptom.id + ',:,1'}">
+                                                   th:name="${'symptom:' + symptom.id}" th:value="${symptom.id + ',:,1'}">
                                         </td>
                                         <td>
                                             <input type="radio" class="form-check-input symptom_checkbox"
                                                    th:name="${'symptom:' + symptom.id}" th:value="${symptom.id + ',:,0'}">
                                         </td>
                                     </tr>
-                                </tbody>
-                            </table>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                        <div class="col-sm-12">
+                            <label for="entry_listCure">
+                                Danh sách vắc-xin hoặc sinh phẩm được sử dụng
+                            </label>
+                            <input type="text" class="form-control" id="entry_listCure">
                         </div>
                     </div>
-                    <div class="col-sm-12">
-                        <label for="entry_listCure">
-                            Danh sách vắc-xin hoặc sinh phẩm được sử dụng
-                        </label>
-                        <input type="text" class="form-control" id="entry_listCure">
-                    </div>
-                </div>
-                <div class="row">
-                    <div class="col-sm-12">
-                        <p class="declare_tittle">Lịch sử phơi nhiễm: Trong vòng 14 ngày qua, Anh/Chị có <span>(*)</span></p>
-                        <div class="table-responsive">
-                            <table class="table">
-                                <thead>
-                                <tr>
-                                    <th style="width: 80%"></th>
-                                    <th style="width: 10%">Có</th>
-                                    <th style="width: 10%">Không</th>
-                                </tr>
-                                </thead>
-                                <tbody>
-                                <tr th:each="exposure:${exposures}">
-                                    <td th:text="${exposure.name}">
-                                    </td>
-                                    <td>
-                                        <input type="radio" class="form-check-input exposure_checkbox"
-                                               th:name="${'exposure:' + exposure.id}" th:value="${exposure.id + ',:,1'}">
-                                    </td>
-                                    <td>
-                                        <input type="radio" class="form-check-input exposure_checkbox"
-                                               th:name="${'exposure:' + exposure.id}" th:value="${exposure.id + ',:,0'}">
-                                    </td>
-                                </tr>
-                                </tbody>
-                            </table>
+                    <div class="row">
+                        <div class="col-sm-12">
+                            <p class="declare_tittle">Lịch sử phơi nhiễm: Trong vòng 14 ngày qua, Anh/Chị có <span>(*)</span></p>
+                            <div class="table-responsive">
+                                <table class="table">
+                                    <thead>
+                                    <tr>
+                                        <th style="width: 80%"></th>
+                                        <th style="width: 10%">Có</th>
+                                        <th style="width: 10%">Không</th>
+                                    </tr>
+                                    </thead>
+                                    <tbody>
+                                    <tr th:each="exposure:${exposures}">
+                                        <td th:text="${exposure.name}">
+                                        </td>
+                                        <td>
+                                            <input type="radio" class="form-check-input exposure_checkbox"
+                                                   th:name="${'exposure:' + exposure.id}" th:value="${exposure.id + ',:,1'}">
+                                        </td>
+                                        <td>
+                                            <input type="radio" class="form-check-input exposure_checkbox"
+                                                   th:name="${'exposure:' + exposure.id}" th:value="${exposure.id + ',:,0'}">
+                                        </td>
+                                    </tr>
+                                    </tbody>
+                                </table>
+                            </div>
                         </div>
                     </div>
-                </div>
+                </form>
+
                 <div class="row">
                     <button type="button" class="btn btn-primary"
                         onclick="healthDeclaration()">
@@ -247,6 +277,45 @@
             </div>
         </div>
 
+    </div>
+
+    <div class="modal fade" id="messengerErrorModal" tabindex="-1" role="dialog" aria-labelledby="errorTittle" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="errorTittle">Thông Tin Không Đầy Đủ</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div id="modal_messenger_error" class="text-center">
+
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Đóng</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="modal fade" id="messengerSuccess" tabindex="-1" role="dialog" aria-labelledby="successTittle" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="successTittle">Bạn Đã Hoàn Thành Khảo Sát</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <p>Cảm ơn sự trợ giúp của bạn</p>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Đóng</button>
+                </div>
+            </div>
+        </div>
     </div>
     <footer th:replace="layout::bottomBar"></footer>
     <th:block th:replace="layout::jsAll"></th:block>
@@ -270,7 +339,9 @@
             declare.getProvince($("#national_Departure").val(), $("#entry_provinceDeparture"));
             declare.getProvince($("#national_destination").val(), $("#entry_provinceDestination"));
             declare.getProvinceForLocation($("#contact_Province"),$("#contact_District"),$("#contact_Location"));
+            declare.setValidate();
         });
+
         $("#national_Departure").change(
             function () {
                 declare.getProvince($(this).val(), $("#entry_provinceDeparture"));
@@ -291,9 +362,13 @@
                 declare.getWard($(this).val(),$("#contact_Location"));
             }
         );
+        function checkPassport() {
+            declare.result_passport = declare.checkPassport($("#person_legalDocument").val(), $("#passport_messenger"));
+            $("#messengerResult").html("");
+        }
 
         function healthDeclaration() {
-            declare.createPerSon();
+            declare.dataValidate();
         }
     </script>
 </body>
