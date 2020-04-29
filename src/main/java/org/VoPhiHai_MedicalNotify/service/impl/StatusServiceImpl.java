@@ -4,15 +4,16 @@ import com.github.cliftonlabs.json_simple.JsonObject;
 import org.VoPhiHai_MedicalNotify.model.Entry;
 import org.VoPhiHai_MedicalNotify.model.Status;
 import org.VoPhiHai_MedicalNotify.model.Symptom;
+import org.VoPhiHai_MedicalNotify.model.support.Statistical;
 import org.VoPhiHai_MedicalNotify.repository.StatusRepository;
 import org.VoPhiHai_MedicalNotify.service.EntryService;
 import org.VoPhiHai_MedicalNotify.service.StatusService;
 import org.VoPhiHai_MedicalNotify.service.SymptomService;
 import org.springframework.beans.factory.annotation.Autowired;
 
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.*;
 
 public class StatusServiceImpl implements StatusService {
     @Autowired
@@ -29,29 +30,30 @@ public class StatusServiceImpl implements StatusService {
         return statusRepository.save(status);
     }
 
-    @Override
-    public void declare(List<Status> statuses, Entry entry) {
-        Date current = new Date();
-        for(Status status: statuses){
-            status.setDateDeclare(current);
-            status.setEntry(entry);
-            this.create(status);
-        }
-    }
+//    @Override
+//    public void declare(List<Status> statuses, Entry entry) {
+//        Date current = new Date();
+//        for(Status status: statuses){
+//            status.setDateDeclare(current);
+//            status.setEntry(entry);
+//            this.create(status);
+//        }
+//    }
 
     @Autowired
     private EntryService entryService;
     @Autowired
     private SymptomService symptomService;
     @Override
-    public void declare(List<JsonObject> statusJson, String entryId) {
+    public List<Status> declare(List<LinkedHashMap<String,String>> statusJson, Entry entry) {
         Date current = new Date();
         HashMap<String, Symptom> mapSymptom = symptomService.findMapEnable();
-        Entry entry = entryService.findById(entryId);
+//        Entry entry = entryService.findById(entryId);
         if (entry!=null){
             Status status;
             String hasSymptom;
-            for (JsonObject jsonObject: statusJson){
+            List<Status> statusList = new ArrayList<>();
+            for (LinkedHashMap<String,String> jsonObject: statusJson){
                 status = new Status();
                 status.setDateDeclare(current);
                 status.setEntry(entry);
@@ -63,9 +65,12 @@ public class StatusServiceImpl implements StatusService {
                 else
                     status.setHaveSymptom(false);
 //                status.setHaveSymptom((boolean));
-                this.create(status);
+                status = this.create(status);
+                statusList.add(status);
             }
+            return statusList;
         }
+        return null;
     }
 
     @Override
@@ -75,6 +80,47 @@ public class StatusServiceImpl implements StatusService {
 
     @Override
     public List<Entry> getListEntryHaveSymptomById(Date begin, Date end, Long symptomId) {
+        return null;
+    }
+
+    @Override
+    public List<JsonObject> statisticalByCountSymptom(Date begin, Date end) {
+        List<Statistical> statisticalList = statusRepository.countSymptom(begin,end);
+        HashMap<Long,Long> symptomCount = new HashMap<>();
+        long newValue;
+        for(Statistical statistical_entry : statisticalList){
+            symptomCount.computeIfAbsent(statistical_entry.getCount(), k -> (long) 0);
+            newValue = symptomCount.get(statistical_entry.getCount()) + 1;
+            symptomCount.put(statistical_entry.getCount(), newValue);
+        }
+
+        List<JsonObject> result = new ArrayList<>();
+        symptomCount.forEach((keyCount, count)->{
+            JsonObject jsonObject = new JsonObject();
+            jsonObject.put("numberSymptom", keyCount);
+            jsonObject.put("amountEntry", count);
+            result.add(jsonObject);
+        });
+        if (result.size()>0)
+            return result;
+//        if (statistical.size()>0)
+//            return statistical;
+        return null;
+    }
+
+    @Override
+    public List<JsonObject> statisticalByCountSymptom(JsonObject dateEntry) {
+        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+        try {
+            String date = (String) dateEntry.get("begin");
+            Date begin = dateFormat.parse(date);
+            date = (String) dateEntry.get("end");
+            Date end = dateFormat.parse(date);
+            return this.statisticalByCountSymptom(begin,end);
+        } catch (ParseException e) {
+            e.printStackTrace();
+            System.out.println("Lỗi Chuyển Đổi Ngày :");
+        }
         return null;
     }
 }

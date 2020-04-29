@@ -1,6 +1,7 @@
 package org.VoPhiHai_MedicalNotify.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import org.hibernate.annotations.ColumnDefault;
 
 import javax.persistence.*;
 import java.util.Date;
@@ -12,6 +13,10 @@ public class Person {
     @Id
     @Column(length = 50)
     private String legalDocument;
+    @Column(length = 20)
+    private String passport;
+    @ColumnDefault(value = "1")
+    private boolean isEnabled;
     @Column(length = 200)
     private String name;
     private short birthYear;
@@ -31,6 +36,7 @@ public class Person {
     @Column(length = 200)
     private String createBy;
     private Date createAt;
+    @ColumnDefault(value = "0")
     private boolean isDelete;
     @Column(length = 200)
     private String updateBy;
@@ -45,6 +51,22 @@ public class Person {
 
     public void setLegalDocument(String legalDocument) {
         this.legalDocument = legalDocument;
+    }
+
+    public String getPassport() {
+        return passport;
+    }
+
+    public void setPassport(String passport) {
+        this.passport = passport;
+    }
+
+    public boolean isEnabled() {
+        return isEnabled;
+    }
+
+    public void setEnabled(boolean enabled) {
+        isEnabled = enabled;
     }
 
     public String getName() {
@@ -133,5 +155,15 @@ public class Person {
 
     public void setUpdateAt(Date updateAt) {
         this.updateAt = updateAt;
+    }
+
+    public boolean equals(Person person) {
+        return (
+                (this.birthYear == person.getBirthYear()) &&
+                        (this.gender == person.getGender()) &&
+                        (this.name.equals(person.getName())) &&
+                        (this.getNationality() == person.getNationality()) &&
+                        (this.passport.equals(person.getPassport()))
+                );
     }
 }

@@ -2,14 +2,16 @@ package org.VoPhiHai_MedicalNotify.service.impl;
 
 import com.github.cliftonlabs.json_simple.JsonObject;
 import org.VoPhiHai_MedicalNotify.model.*;
+import org.VoPhiHai_MedicalNotify.model.support.Statistical;
 import org.VoPhiHai_MedicalNotify.repository.EntryRepository;
 import org.VoPhiHai_MedicalNotify.service.*;
 import org.springframework.beans.factory.annotation.Autowired;
 
-import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.LinkedHashMap;
+import java.util.List;
 
 public class EntryServiceImpl implements EntryService {
     @Autowired
@@ -49,19 +51,19 @@ public class EntryServiceImpl implements EntryService {
     @Autowired
     private ProvinceService provinceService;
     @Override
-    public Entry create(JsonObject jsonEntry) {
-        String personId = (String) jsonEntry.get("person");
+    public Entry create(LinkedHashMap<String, String> jsonEntry, Person person, Transport transport) {
+//        String personId = (String) jsonEntry.get("person");
 //        Long transportId = Long.parseLong((String) jsonEntry.get("transport"));
-        Person person = personService.findByLegalDocument(personId);
-        Transport transport = transportService.findById(
-                Long.parseLong((String) jsonEntry.get("transport"))
-        );
+//        Person person = personService.findByPassport(personId);
+//        Transport transport = transportService.findById(
+//                Long.parseLong((String) jsonEntry.get("transport"))
+//        );
 
         if  ((person!=null) && (transport!=null)){
             SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
             try {
                 Entry entry = new Entry();
-                entry.setId(person.getLegalDocument() + "_");
+                entry.setId(person.getPassport() + "_");
                 entry.setGate(gateService.findById(Short.parseShort((String) jsonEntry.get("gate"))));
                 entry.setTransport(transport);
                 entry.setSeatNo((String) jsonEntry.get("seatNo"));
@@ -96,6 +98,30 @@ public class EntryServiceImpl implements EntryService {
         entry.setCreateBy(updateName);
         if (this.findById(entry.getId()) != null){
             return entryRepository.save(entry);
+        }
+        return null;
+    }
+
+    @Override
+    public List<Statistical> statisticalSymptomDeparture(Date begin, Date end) {
+        List<Statistical> statisticalList = entryRepository.statisticalSymptomDeparture(begin,end);
+        if (statisticalList.size()>0)
+            return statisticalList;
+        return null;
+    }
+
+    @Override
+    public List<Statistical> statisticalSymptomDeparture(JsonObject timeFind) {
+        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+        try {
+            String date = (String) timeFind.get("begin");
+            Date begin = dateFormat.parse(date);
+            date = (String) timeFind.get("end");
+            Date end = dateFormat.parse(date);
+            return this.statisticalSymptomDeparture(begin,end);
+        } catch (ParseException e) {
+            e.printStackTrace();
+            System.out.println("Lỗi Chuyển Đổi Ngày :");
         }
         return null;
     }

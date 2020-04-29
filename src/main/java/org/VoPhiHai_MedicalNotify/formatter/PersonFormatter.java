@@ -18,7 +18,7 @@ public class PersonFormatter implements Formatter<Person> {
 
     @Override
     public Person parse(String s, Locale locale) throws ParseException {
-        return personService.findByLegalDocument(s);
+        return personService.findByPassport(s);
     }
 
     @Override

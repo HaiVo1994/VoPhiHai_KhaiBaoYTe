@@ -1,6 +1,5 @@
 package org.VoPhiHai_MedicalNotify.service.impl;
 
-import com.github.cliftonlabs.json_simple.JsonObject;
 import org.VoPhiHai_MedicalNotify.model.Transport;
 import org.VoPhiHai_MedicalNotify.model.TransportType;
 import org.VoPhiHai_MedicalNotify.repository.TransportRepository;
@@ -10,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.Date;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 
 public class TransportServiceImpl implements TransportService {
@@ -24,7 +24,7 @@ public class TransportServiceImpl implements TransportService {
     }
 
     @Override
-    public Transport create(JsonObject transportJson) {
+    public Transport create(LinkedHashMap<String, String> transportJson) {
         String transportationNo = (String) transportJson.get("transportationNo");
         Transport transport = this.findByTransportationNo(transportationNo);
         if (transport!=null){

@@ -1,6 +1,5 @@
 package org.VoPhiHai_MedicalNotify.service.impl;
 
-import com.github.cliftonlabs.json_simple.JsonObject;
 import org.VoPhiHai_MedicalNotify.model.Contact;
 import org.VoPhiHai_MedicalNotify.model.Person;
 import org.VoPhiHai_MedicalNotify.model.Ward;
@@ -11,6 +10,7 @@ import org.VoPhiHai_MedicalNotify.service.WardService;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.Date;
+import java.util.LinkedHashMap;
 
 public class ContactServiceImpl implements ContactService {
     @Autowired
@@ -70,8 +70,8 @@ public class ContactServiceImpl implements ContactService {
     @Autowired
     private WardService wardService;
     @Override
-    public Contact change(JsonObject jsonContact) {
-        Person person = personService.findByLegalDocument(String.valueOf(jsonContact.get("person")));
+    public Contact change(LinkedHashMap<String, String> jsonContact, Person person) {
+//        Person person = personService.findByPassport(String.valueOf(jsonContact.get("person")));
         if(person!=null){
             Contact contact = new Contact();
             contact.setName(String.valueOf(jsonContact.get("name")));

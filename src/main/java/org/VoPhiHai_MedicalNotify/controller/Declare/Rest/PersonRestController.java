@@ -15,12 +15,10 @@ public class PersonRestController {
     @Autowired
     private PersonService personService;
     @RequestMapping(value = "/check/{passport}", method = RequestMethod.GET, produces = "application/json;charset=UTF-8")
-    public ResponseEntity<JsonObject> checkPassport(@PathVariable String passport){
-        Person person = personService.findByLegalDocument(passport);
+    public ResponseEntity<Person> checkPassport(@PathVariable String passport){
+        Person person = personService.findByPassport(passport);
         if (person!=null){
-            JsonObject personId = new JsonObject();
-            personId.put("personId", person.getLegalDocument());
-            return new ResponseEntity<>(personId, HttpStatus.OK);
+            return new ResponseEntity<>(person, HttpStatus.OK);
         }
         return new ResponseEntity<>(HttpStatus.NOT_FOUND);
     }

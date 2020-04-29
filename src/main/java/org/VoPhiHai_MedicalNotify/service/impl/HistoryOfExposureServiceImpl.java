@@ -10,9 +10,7 @@ import org.VoPhiHai_MedicalNotify.service.ExposureService;
 import org.VoPhiHai_MedicalNotify.service.HistoryOfExposureService;
 import org.springframework.beans.factory.annotation.Autowired;
 
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
+import java.util.*;
 
 public class HistoryOfExposureServiceImpl implements HistoryOfExposureService {
     @Autowired
@@ -31,12 +29,14 @@ public class HistoryOfExposureServiceImpl implements HistoryOfExposureService {
     }
 
     @Override
-    public void declare(List<HistoryOfExposure> historyOfExposures, Entry entry, Exposure exposure) {
+    public List<HistoryOfExposure> declare(List<HistoryOfExposure> historyOfExposures, Entry entry, Exposure exposure) {
         Date current = new Date();
+        //Fix late
         for (HistoryOfExposure historyOfExposure: historyOfExposures) {
             historyOfExposure.setDateDeclare(current);
             this.create(historyOfExposure, entry, exposure);
         }
+        return null;
     }
 
     @Autowired
@@ -44,14 +44,15 @@ public class HistoryOfExposureServiceImpl implements HistoryOfExposureService {
     @Autowired
     private ExposureService exposureService;
     @Override
-    public void declare(List<JsonObject> historyOfExposures, String entryId) {
+    public List<HistoryOfExposure> declare(List<LinkedHashMap<String,String>> historyOfExposures, Entry entry) {
         Date current = new Date();
-        Entry entry = entryService.findById(entryId);
+//        Entry entry = entryService.findById(entryId);
         if (entry!=null){
             HistoryOfExposure historyOfExposure;
             HashMap<String, Exposure> mapExposure = exposureService.mapEnable();
             String checkExposure;
-            for (JsonObject history: historyOfExposures){
+            List<HistoryOfExposure> historyOfExposureList = new ArrayList<>();
+            for (LinkedHashMap<String,String> history: historyOfExposures){
                 historyOfExposure = new HistoryOfExposure();
                 historyOfExposure.setDateDeclare(current);
                 checkExposure = String.valueOf(history.get("hasExposure"));
@@ -61,10 +62,12 @@ public class HistoryOfExposureServiceImpl implements HistoryOfExposureService {
                 else {
                     historyOfExposure.setHasExposure(false);
                 }
-                this.create(historyOfExposure, entry, mapExposure.get(String.valueOf(history.get("exposure"))));
+                historyOfExposure = this.create(historyOfExposure, entry, mapExposure.get(String.valueOf(history.get("exposure"))));
+                historyOfExposureList.add(historyOfExposure);
             }
+            return historyOfExposureList;
         }
-
+        return null;
     }
 
 
