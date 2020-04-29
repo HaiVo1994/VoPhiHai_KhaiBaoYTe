@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Thống Kê</title>
+    <th:block th:replace="layout::cssAll"></th:block>
+    <link type="text/css" rel="stylesheet" th:href="@{/css/Chart.min.css}"/>
+</head>
+<body>
+<header th:replace="layout::topBar"></header>
+<main role="main" class="container main-contain">
+    <div class="container-fluid h-auto inside">
+        <div class="row">
+            <h1>Thống Kê</h1>
+        </div>
+        <div class="row">
+            <div class="col-sm-12 col-lg-4">
+                <label for="statistical_type">Loại Thống Kê</label>
+                <select class="form-control select_search" id="statistical_type">
+
+                </select>
+            </div>
+            <div class="col-sm-6 col-lg-3">
+                <label for="beginDate">Từ Ngày</label>
+                <input type="date" class="form-control" id="beginDate">
+            </div>
+            <div class="col-sm-6 col-lg-3">
+                <label for="endDate">Từ Ngày</label>
+                <input type="date" class="form-control" id="endDate">
+            </div>
+            <div class="col-12 col-lg-2">
+                <button type="button" class="btn btn-primary" onclick="draw()">Thống Kê</button>
+            </div>
+        </div>
+        <div class="row">
+            <canvas id="statisticalChart" width="100%" height="40"></canvas>
+
+        </div>
+    </div>
+</main>
+<footer th:replace="layout::bottomBar"></footer>
+<th:block th:replace="layout::jsAll"></th:block>
+<script th:src="@{/js/chart/Chart.js}"></script>
+<script th:src="@{/js/web/statistical.js}"></script>
+<script>
+    $(document).ready(
+        function () {
+            $(".select_search").select2();
+        }
+    );
+    function draw() {
+        statistical.getSymptom();
+    }
+</script>
+</body>
+</html>

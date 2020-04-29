@@ -6,8 +6,8 @@
     <th:block th:replace="layout::cssAll"></th:block>
 </head>
 <body>
-    <nav th:replace="layout::topBar"></nav>
-    <div class="container">
+    <header th:replace="layout::topBar"></header>
+    <main role="main" class="container">
         <div class="container-fluid inside">
             <div class="text-center">
                 <h2 id="messengerResult">
@@ -43,7 +43,7 @@
 
                         </div>
                     </div>
-                    <div class="row" id="person-info">
+                    <div class="row">
                         <div class="form-group col-sm-12 col-md-8">
                             <label for="person_name">Họ tên <span>(*)</span></label>
                             <input type="text" class="form-control" name="person_name"
@@ -277,7 +277,7 @@
             </div>
         </div>
 
-    </div>
+    </main>
 
     <div class="modal fade" id="messengerErrorModal" tabindex="-1" role="dialog" aria-labelledby="errorTittle" aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered" role="document">
@@ -334,7 +334,6 @@
             birth.val(end-25);
 
             $(".select_search").select2();
-            $("#person-info").hide();
 
             declare.getProvince($("#national_Departure").val(), $("#entry_provinceDeparture"));
             declare.getProvince($("#national_destination").val(), $("#entry_provinceDestination"));
@@ -362,8 +361,13 @@
                 declare.getWard($(this).val(),$("#contact_Location"));
             }
         );
+        $("#transportType").change(
+            function () {
+                declare.transportTypeChange();
+            }
+        );
         function checkPassport() {
-            declare.result_passport = declare.checkPassport($("#person_legalDocument").val(), $("#passport_messenger"));
+            declare.result_passport = declare.checkPassport();
             $("#messengerResult").html("");
         }
 

@@ -33,9 +33,7 @@ value.getPerson = function () {
         "name": $("#person_name").val(),
         "birthYear": $("#person_birthYear").val(),
         "gender": $("#person_gender").val(),
-        "Nationality": {
-            "id": $("#person_nationality").val()
-        }
+        "Nationality": $("#person_nationality").val()
     };
 }
 value.getContact = function() {
@@ -82,6 +80,7 @@ value.getStatuses = function() {
         return status;
     }
 }
+
 value.getHistoryOfExposure = function() {
     var length = 0,
         split = [],
@@ -106,5 +105,16 @@ value.getHistoryOfExposure = function() {
     else{
         console.log("Khai Báo Đủ Lịch Sử Phơi Nhiễm");
         return history_of_exposure;
+    }
+}
+
+value.getDeclare = function () {
+    return {
+        person: value.getPerson(),
+        contact: value.getContact(),
+        transport: value.getTransport(),
+        entry: value.getEntry(),
+        status: value.getStatuses(),
+        historyOfExposures: value.getStatuses()
     }
 }

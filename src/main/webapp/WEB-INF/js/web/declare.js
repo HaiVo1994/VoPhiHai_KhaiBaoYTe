@@ -98,8 +98,10 @@ declare.getWard = function(districtId, wardSelect) {
     });
 }
 
-declare.checkPassport = function (passport, messengerLocation) {
+declare.checkPassport = function () {
     var infoInput = $("#person-info"),
+        passport = $("#person_legalDocument").val(),
+        messengerLocation = $("#passport_messenger"),
         check = true;
     $.ajax(
         {
@@ -110,21 +112,18 @@ declare.checkPassport = function (passport, messengerLocation) {
         }
     ).done(
         function (data) {
-            infoInput.hide();
-            messengerLocation.html("<p>Mã " + data.personId + "Đã Có Trong Hệ Thống </p>")
-            messengerLocation.append("<p>Bạn Không Cần Phải Nhập Thông Tin Cá Nhân</p>");
-            $("#person_name").rules("remove", "required");
-            declare.result_passport = true;
+            messengerLocation.html("<p>Mã " + passport + "Đã Có Trong Hệ Thống </p>")
+            $("#person_name").val(data.name);
+            $("#person_birthYear").val(data.birthYear);
+            $("#person_birthYear").find("option[value=" + data.birthYear + "]").attr('selected','selected');
+            $("#person_gender").val(data.gender);
+            $("#person_gender").find("option[value=" + data.gender + "]").attr('selected','selected');
+            $("#person_nationality").val(data.Nationality.id);
+            $("#person_nationality").find("option[value=" + data.Nationality.id + "]").attr('selected','selected');
         }
     ).fail(
         function () {
-            messengerLocation.html("");
-            $("#person_name").rules("add",
-                {
-                    required:true
-                });
-            infoInput.show();
-            declare.result_passport = false;
+            messengerLocation.html("<p>Mã " + passport + "Chưa Có Trong Hệ Thống </p>");
         }
     );
     return check;
@@ -260,8 +259,8 @@ declare.setValidate = function(){
     $("#person_legalDocument").rules("add",
         {
             required: true,
-            maxlength: 30,
-            minlength: 5,
+            maxlength: 15,
+            minlength: 9,
             messages:{
                 required: "Nhập số hộ chiếu hoặc giấy thông hành hợp pháp khác",
                 maxlength: "Quá dài, bạn chắc bạn đang nhập thông tin thông hành chứ?",
@@ -367,147 +366,165 @@ declare.setValidate = function(){
         );
     $("#contact_email").rules("add",
         {
-            required: true,
+            // required: true,
             email:true,
             messages:{
-                required: "Vui lòng nhập email",
+                // required: "Vui lòng nhập email",
                 email: "Email sai, vui lòng nhập lại"
             }
         }
         );
 
 }
-declare.result_passport = false;
-declare.dataValidate = function(){
-    var passportInput = $("#person_legalDocument");
-    if (passportInput.valid()) {
-        var check = true;
-        if (!declare.result_passport) {
-            declare.result_passport = declare.checkPassport(passportInput.val(), $("#passport_messenger"));
-            // check = $("#person_name").valid();
-        }
-        var tranportNo = $("#transport_transportationNo"),
-            seatNo = $("#entry_seatNo");
-        if ($("#transportType").val() != flyTypeId) {
-            // check = tranportNo.valid() && seatNo.valid();
-            tranportNo.rules("remove", "required");
-            seatNo.rules("remove", "required");
-        }
-
-        if ($("#formDeclare").valid()) {
-            var messengerError = "Vui Lòng";
-            if (value.getStatuses() == null) {
-                messengerError += "<p>Hoàn thành khảo sát sức khỏe </p>";
-                check = false;
-            }
-            if (value.getHistoryOfExposure() == null) {
-                messengerError += "<p>Hoàn thành khảo sát lây nhiễm </p>";
-                check = false;
-            }
-
-            if (!check) {
-                $("#modal_messenger_error").html(messengerError);
-                $("#messengerErrorModal").modal("show");
-            }
-            else {
-                declare.createPerSon();
-            }
-        } else {
-            console.log("Form sai");
-            form.errors();
-        }
+declare.transportTypeChange = function(){
+    var transportNo = $("#transport_transportationNo"),
+        seatNo = $("#entry_seatNo");
+    if ($("#transportType").val() === flyTypeId) {
+        transportNo.rules("add", "required");
+        seatNo.rules("add", "required");
+    }
+    else {
+        transportNo.rules("remove", "required");
+        seatNo.rules("remove", "required");
     }
 }
-declare.createPerSon = function () {
-    var person = value.getPerson();
-    $.ajax({
-        url: urlRoot + "declare/create_person/" + person.Nationality.id,
-        method: 'POST',
-        dataType: 'json',
-        contentType: 'application/json',
-        data: JSON.stringify(person)
-    }).done(
-        function (data) {
-            var idPerson = data.passport + "";
-            declare.createContact(idPerson);
-            declare.createTransport(idPerson);
-            console.log(idPerson);
-        }
-    );
-}
+declare.dataValidate = function(){
+    var formSelect = $("#formDeclare");
 
-declare.createContact = function (idPerson) {
-    var contact = value.getContact();
-    contact.person = idPerson;
-    $.ajax({
-        url: urlRoot + "declare/create_contact",
-        method: 'POST',
-        dataType: 'json',
-        contentType: 'application/json',
-        data: JSON.stringify(contact)
-    }).done();
-}
-
-declare.createTransport = function(idPerson){
-    var transport = value.getTransport();
-    $.ajax({
-        url: urlRoot + "declare/create_transport",
-        method: 'POST',
-        dataType: 'json',
-        contentType: 'application/json',
-        data: JSON.stringify(transport)
-    }).done(
-        function (data) {
-            declare.createEntry(data.idTransport ,idPerson);
-            console.log(data.idTransport);
+    if (formSelect.valid()) {
+        var messengerError = "Vui Lòng";
+        var check =true;
+        if (value.getStatuses() == null) {
+            messengerError += "<p>Hoàn thành khảo sát sức khỏe </p>";
+            check = false;
         }
-    );
+        if (value.getHistoryOfExposure() == null) {
+            messengerError += "<p>Hoàn thành khảo sát lây nhiễm </p>";
+            check = false;
+        }
+
+        if (!check) {
+            $("#modal_messenger_error").html(messengerError);
+            $("#messengerErrorModal").modal("show");
+        }
+        else {
+            // declare.createPerSon();
+            declare.sendDeclare();
+        }
+    } else {
+        $("#modal_messenger_error").html("Thông Tin Thiếu");
+        $("#messengerErrorModal").modal("show");
+    }
 }
-declare.createEntry = function (idTransport, idPerson) {
-    var entry = value.getEntry(idTransport, idPerson);
+declare.sendDeclare = function () {
+    var declareData = value.getDeclare();
     $.ajax({
-        url: urlRoot + "declare/create_entry",
+        url: urlRoot + "declare/sendDeclare",
         method: 'POST',
         dataType: 'json',
         contentType: 'application/json',
-        data: JSON.stringify(entry)
+        data: JSON.stringify(declareData)
     }).done(
         function (data) {
-            var idEntry = data.entryid;
             console.log(data.messenger);
-            declare.entryStatus(idEntry);
-            declare.entryExposure(idEntry);
-            // $("#messengerResult").html("Bạn Đã Hoàn Thành Việc Khai Báo Y Tế");
             $("#messengerSuccess").modal("show");
         }
-    );
-}
-
-declare.entryStatus = function (idEntry) {
-    var listStatus = value.getStatuses();
-    $.ajax({
-        url: urlRoot + "declare/entry_symptom/" + idEntry,
-        method: 'POST',
-        dataType: 'json',
-        contentType: 'application/json',
-        data: JSON.stringify(listStatus)
-    }).always(
-        function () {
-            console.log("Khai Báo Sức Khỏe Hoàn Tất");
+    ).fail(
+        function (data) {
+            console.log(data.messenger);
         }
     );
 }
-declare.entryExposure = function (idEntry) {
-    var historyOfExposure = value.getHistoryOfExposure();
-    $.ajax({
-        url: urlRoot + "declare/entry_exposure/" + idEntry,
-        method: 'POST',
-        dataType: 'json',
-        contentType: 'application/json',
-        data: JSON.stringify(historyOfExposure)
-    }).always(
-        function () {
-            console.log("Khai Báo Tiếp Xúc Hoàn Tất");
-        }
-    );
-}
+// declare.createPerSon = function () {
+//     var person = value.getPerson();
+//     $.ajax({
+//         url: urlRoot + "declare/create_person/" + person.Nationality.id,
+//         method: 'POST',
+//         dataType: 'json',
+//         contentType: 'application/json',
+//         data: JSON.stringify(person)
+//     }).done(
+//         function (data) {
+//             var idPerson = data.passport + "";
+//             declare.createContact(idPerson);
+//             declare.createTransport(idPerson);
+//             console.log(idPerson);
+//         }
+//     );
+// }
+//
+// declare.createContact = function (idPerson) {
+//     var contact = value.getContact();
+//     contact.person = idPerson;
+//     $.ajax({
+//         url: urlRoot + "declare/create_contact",
+//         method: 'POST',
+//         dataType: 'json',
+//         contentType: 'application/json',
+//         data: JSON.stringify(contact)
+//     }).done();
+// }
+//
+// declare.createTransport = function(idPerson){
+//     var transport = value.getTransport();
+//     $.ajax({
+//         url: urlRoot + "declare/create_transport",
+//         method: 'POST',
+//         dataType: 'json',
+//         contentType: 'application/json',
+//         data: JSON.stringify(transport)
+//     }).done(
+//         function (data) {
+//             declare.createEntry(data.idTransport ,idPerson);
+//             console.log(data.idTransport);
+//         }
+//     );
+// }
+// declare.createEntry = function (idTransport, idPerson) {
+//     var entry = value.getEntry(idTransport, idPerson);
+//     $.ajax({
+//         url: urlRoot + "declare/create_entry",
+//         method: 'POST',
+//         dataType: 'json',
+//         contentType: 'application/json',
+//         data: JSON.stringify(entry)
+//     }).done(
+//         function (data) {
+//             var idEntry = data.entryid;
+//             console.log(data.messenger);
+//             declare.entryStatus(idEntry);
+//             declare.entryExposure(idEntry);
+//             // $("#messengerResult").html("Bạn Đã Hoàn Thành Việc Khai Báo Y Tế");
+//             $("#messengerSuccess").modal("show");
+//         }
+//     );
+// }
+//
+// declare.entryStatus = function (idEntry) {
+//     var listStatus = value.getStatuses();
+//     $.ajax({
+//         url: urlRoot + "declare/entry_symptom/" + idEntry,
+//         method: 'POST',
+//         dataType: 'json',
+//         contentType: 'application/json',
+//         data: JSON.stringify(listStatus)
+//     }).always(
+//         function () {
+//             console.log("Khai Báo Sức Khỏe Hoàn Tất");
+//         }
+//     );
+// }
+// declare.entryExposure = function (idEntry) {
+//     var historyOfExposure = value.getHistoryOfExposure();
+//     $.ajax({
+//         url: urlRoot + "declare/entry_exposure/" + idEntry,
+//         method: 'POST',
+//         dataType: 'json',
+//         contentType: 'application/json',
+//         data: JSON.stringify(historyOfExposure)
+//     }).always(
+//         function () {
+//             console.log("Khai Báo Tiếp Xúc Hoàn Tất");
+//         }
+//     );
+// }

@@ -47,6 +47,7 @@ public class PersonServiceImpl implements PersonService {
                 this.save(personDeclared);
             }
         }
+        person.setEnabled(true);
         return this.save(person);
     }
 
