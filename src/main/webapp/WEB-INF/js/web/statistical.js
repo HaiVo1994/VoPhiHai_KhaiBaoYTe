@@ -26,14 +26,56 @@ statistical.borderColor = [
     'rgba(223,49,240,1)'
 ];
 
+statistical.setValidate = function(){
+    jQuery.validator.addMethod("endStatisticalDate",
+        function (value, element, params) {
+            if (!/Invalid|NaN/.test(new Date(value))) {
+                return new Date(value) >= new Date($(params).val());
+            }
+            return isNaN(value) && isNaN($(params).val())
+                || (Number(value) >= Number($(params).val()));
+        },"Ngày Kết Thúc Phải Lớn Hơn Hoặc Bằng Ngày Bắt Đầu");
+    jQuery.validator.addMethod("dateSelect",
+        function (value, element) {
+            var today = new Date();
+            if (!/Invalid|NaN/.test(new Date(value))) {
+                return new Date(value) <= today;
+            }
+            return isNaN(value) || (Number(value) > Number(today));
+        },"Ngày Được Chọn Phải Là Ngày Hôm Nay Hoặc Trước Đó");
+    $("#formStatistical").validate();
+    $("#beginDate").rules("add",
+        {
+            required: true,
+            dateSelect: true,
+            messages:{
+                required: "Bạn phải nhập ngày",
+                dateSelect: "Ngày Được Chọn Phải Là Ngày Hôm Nay Hoặc Trước Đó"
+            }
+        }
+        );
+    $("#endDate").rules("add",
+        {
+            required: true,
+            dateSelect: true,
+            endStatisticalDate: $("#beginDate"),
+            messages:{
+                required: "Bạn phải nhập ngày",
+                dateSelect: "Ngày Được Chọn Phải Là Ngày Hôm Nay Hoặc Trước Đó",
+                endStatisticalDate: "Ngày Kết Thúc Phải Lớn Hơn Hoặc Bằng Ngày Bắt Đầu"
+            }
+        }
+        );
+}
+
 statistical.getSymptom = function () {
-    $("#locationOfChart").html("<canvas id=\"statisticalChart\" width=\"100%\" height=\"40\"></canvas>");
-    var dateBegin = $("#beginDate").val(),
-        dateEnd = $("#endDate").val();
-    if (dateBegin!=="" && dateEnd!==""){
+    var dateBegin = $("#beginDate"),
+        dateEnd = $("#endDate");
+    if (dateBegin.valid() && dateEnd.valid()){
+        $("#locationOfChart").html("<canvas id=\"statisticalChart\" width=\"100%\" height=\"40\"></canvas>");
         var dateRange = {
-            begin:dateBegin,
-            end:dateEnd
+            begin:dateBegin.val(),
+            end:dateEnd.val()
         }
         $.ajax(
             {
@@ -78,6 +120,10 @@ statistical.getSymptom = function () {
                                     beginAtZero: true
                                 }
                             }]
+                        },
+                        title:{
+                            display: true,
+                            text: "Thống Kê Số Người Có Cùng Số Lượng Triệu Chứng Từ " + dateRange.begin + " Đến " + dateRange.end
                         }
                     }
                 }
@@ -92,14 +138,13 @@ statistical.getSymptom = function () {
 
 }
 statistical.getByTypeSymptom = function () {
-    $("#locationOfChart").html("<canvas id=\"statisticalChart\" width=\"100%\" height=\"40\"></canvas>");
-
-    var dateBegin = $("#beginDate").val(),
-        dateEnd = $("#endDate").val();
-    if (dateBegin!=="" && dateEnd!==""){
+    var dateBegin = $("#beginDate"),
+        dateEnd = $("#endDate");
+    if (dateBegin.valid() && dateEnd.valid()){
+        $("#locationOfChart").html("<canvas id=\"statisticalChart\" width=\"100%\" height=\"40\"></canvas>");
         var dateRange = {
-            begin:dateBegin,
-            end:dateEnd
+            begin:dateBegin.val(),
+            end:dateEnd.val()
         }
         $.ajax(
             {
@@ -141,9 +186,14 @@ statistical.getByTypeSymptom = function () {
                         scales: {
                             yAxes: [{
                                 ticks: {
-                                    beginAtZero: true
+                                    beginAtZero: true,
+                                    stepSize: 1
                                 }
                             }]
+                        },
+                        title:{
+                            display: true,
+                            text: "Thống Kê Theo Loại Triệu Chứng Từ " + dateRange.begin + " Đến " + dateRange.end
                         }
                     }
                 }
@@ -159,13 +209,13 @@ statistical.getByTypeSymptom = function () {
 }
 
 statistical.getExposure = function () {
-    $("#locationOfChart").html("<canvas id=\"statisticalChart\" width=\"100%\" height=\"40\"></canvas>");
-    var dateBegin = $("#beginDate").val(),
-        dateEnd = $("#endDate").val();
-    if (dateBegin!=="" && dateEnd!==""){
+    var dateBegin = $("#beginDate"),
+        dateEnd = $("#endDate");
+    if (dateBegin.valid() && dateEnd.valid()){
+        $("#locationOfChart").html("<canvas id=\"statisticalChart\" width=\"100%\" height=\"40\"></canvas>");
         var dateRange = {
-            begin:dateBegin,
-            end:dateEnd
+            begin:dateBegin.val(),
+            end:dateEnd.val()
         }
         $.ajax(
             {
@@ -196,7 +246,7 @@ statistical.getExposure = function () {
                     data: {
                         labels: label,
                         datasets:[{
-                            label: "# Triệu Chứng",
+                            label: "# Tiếp Xúc",
                             data: dataValue,
                             backgroundColor: background,
                             borderColor: border,
@@ -210,6 +260,10 @@ statistical.getExposure = function () {
                                     beginAtZero: true
                                 }
                             }]
+                        },
+                        title:{
+                            display: true,
+                            text: "Thống Kê Số Người Có Cùng Số Nguồn Bệnh Đã Tiếp Xúc Từ " + dateRange.begin + " Đến " + dateRange.end
                         }
                     }
                 }
@@ -224,14 +278,13 @@ statistical.getExposure = function () {
 
 }
 statistical.getByTypeExposure = function () {
-    $("#locationOfChart").html("<canvas id=\"statisticalChart\" width=\"100%\" height=\"40\"></canvas>");
-
-    var dateBegin = $("#beginDate").val(),
-        dateEnd = $("#endDate").val();
-    if (dateBegin!=="" && dateEnd!==""){
+    var dateBegin = $("#beginDate"),
+        dateEnd = $("#endDate");
+    if (dateBegin.valid() && dateEnd.valid()){
+        $("#locationOfChart").html("<canvas id=\"statisticalChart\" width=\"100%\" height=\"40\"></canvas>");
         var dateRange = {
-            begin:dateBegin,
-            end:dateEnd
+            begin:dateBegin.val(),
+            end:dateEnd.val()
         }
         $.ajax(
             {
@@ -273,9 +326,14 @@ statistical.getByTypeExposure = function () {
                         scales: {
                             yAxes: [{
                                 ticks: {
-                                    beginAtZero: true
+                                    beginAtZero: true,
+                                    stepSize: 1
                                 }
                             }]
+                        },
+                        title:{
+                            display: true,
+                            text: "Thống Kê Số Người Từng Tiếp Xúc Với Các Loại Nguồn Bệnh Từ " + dateRange.begin + " Đến " + dateRange.end
                         }
                     }
                 }
@@ -290,13 +348,13 @@ statistical.getByTypeExposure = function () {
 }
 
 statistical.getEntry = function () {
-    $("#locationOfChart").html("<canvas id=\"statisticalChart\" width=\"100%\" height=\"40\"></canvas>");
-    var dateBegin = $("#beginDate").val(),
-        dateEnd = $("#endDate").val();
-    if (dateBegin!=="" && dateEnd!=="") {
+    var dateBegin = $("#beginDate"),
+        dateEnd = $("#endDate");
+    if (dateBegin.valid() && dateEnd.valid()){
+        $("#locationOfChart").html("<canvas id=\"statisticalChart\" width=\"100%\" height=\"40\"></canvas>");
         var dateRange = {
-            begin: dateBegin,
-            end: dateEnd
+            begin:dateBegin.val(),
+            end:dateEnd.val()
         }
         $.ajax(
             {
@@ -323,7 +381,7 @@ statistical.getEntry = function () {
                             fillColor: 'rgba(37, 147, 127, 0.5)',
                             strokeColor: 'rgba(37, 147, 127, 0.6)',
                             pointColor: 'rgba(37, 147, 127, 1)',
-                            backgroundColor: 'rgba(37, 147, 127, 0.1)',
+                            backgroundColor: 'rgba(37, 147, 127, 0.8)',
                             borderWidth: 1,
                             data: dataValue
                         }]
@@ -332,9 +390,14 @@ statistical.getEntry = function () {
                         scales: {
                             yAxes: [{
                                 ticks: {
-                                    beginAtZero:true
+                                    beginAtZero:true,
+                                    stepSize: 1
                                 }
                             }]
+                        },
+                        title:{
+                            display: true,
+                            text: "Thống Kê Số Người Đã Nhập Cảnh Từ " + dateRange.begin + " Đến " + dateRange.end
                         }
                     }
                 }

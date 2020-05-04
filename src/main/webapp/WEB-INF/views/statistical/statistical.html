@@ -24,18 +24,22 @@
                     <option value="byEntry">Số Người Nhập Cảnh Theo Ngày</option>
                 </select>
             </div>
-            <div class="col-sm-6 col-lg-5 form-group">
-                <label for="beginDate">Từ Ngày</label>
-                <input type="date" class="form-control" id="beginDate">
-            </div>
-            <div class="col-sm-6 col-lg-5 form-group">
-                <label for="endDate">Từ Ngày</label>
-                <input type="date" class="form-control" id="endDate">
-            </div>
-            <div class="col-12 col-lg-2 form-group">
-                <button type="button" class="btn btn-primary" onclick="draw()">Thống Kê</button>
-            </div>
         </div>
+        <form id="formStatistical">
+            <div class="row">
+                <div class="col-sm-6 col-lg-5 form-group">
+                    <label for="beginDate">Từ Ngày</label>
+                    <input type="date" class="form-control" id="beginDate">
+                </div>
+                <div class="col-sm-6 col-lg-5 form-group">
+                    <label for="endDate">Từ Ngày</label>
+                    <input type="date" class="form-control" id="endDate">
+                </div>
+                <div class="col-12 col-lg-2 form-group">
+                    <button type="button" class="btn btn-primary" onclick="draw()">Thống Kê</button>
+                </div>
+            </div>
+        </form>
         <div class="row" id="locationOfChart">
             <canvas id="statisticalChart" width="100%" height="40"></canvas>
 
@@ -50,28 +54,37 @@
     $(document).ready(
         function () {
             $(".select_search").select2();
+            statistical.setValidate();
         }
     );
     function draw() {
-        var typeStatical = $("#statistical_type").val();
-        switch (typeStatical) {
-            case "bySymptomAmount":
-                statistical.getSymptom();
-                break;
-            case "bySymptomType":
-                statistical.getByTypeSymptom();
-                break;
-            case "byExposureAmount":
-                statistical.getExposure();
-                break;
-            case "byExposureType":
-                statistical.getByTypeExposure();
-                break;
-            case "byEntry":
-                statistical.getEntry();
-                break;
+        if ($("#formStatistical").valid()){
+            var typeStatical = $("#statistical_type").val();
+            switch (typeStatical) {
+                case "bySymptomAmount":
+                    statistical.getSymptom();
+                    break;
+                case "bySymptomType":
+                    statistical.getByTypeSymptom();
+                    break;
+                case "byExposureAmount":
+                    statistical.getExposure();
+                    break;
+                case "byExposureType":
+                    statistical.getByTypeExposure();
+                    break;
+                case "byEntry":
+                    statistical.getEntry();
+                    break;
+            }
         }
+
     }
+    // $("#statistical_type").change(
+    //     function () {
+    //         draw();
+    //     }
+    // );
 </script>
 </body>
 </html>
