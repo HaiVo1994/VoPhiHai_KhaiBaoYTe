@@ -60,7 +60,7 @@ statistical.getSymptom = function () {
                 // console.log(dataValue);
                 var cxt = $("#statisticalChart")[0].getContext('2d');
                 var chartSet = {
-                    type: "bar",
+                    type: "pie",
                     data: {
                         labels: label,
                         datasets:[{
@@ -82,6 +82,10 @@ statistical.getSymptom = function () {
                     }
                 }
                 var barChart = new Chart( cxt, chartSet);
+            }
+        ).fail(
+            function () {
+                statistical.failAction();
             }
         );
     }
@@ -145,6 +149,10 @@ statistical.getByTypeSymptom = function () {
                 }
                 var barChart = new Chart( cxt, chartSet);
             }
+        ).fail(
+            function () {
+                statistical.failAction();
+            }
         );
     }
 
@@ -184,7 +192,7 @@ statistical.getExposure = function () {
                 // console.log(dataValue);
                 var cxt = $("#statisticalChart")[0].getContext('2d');
                 var chartSet = {
-                    type: "bar",
+                    type: "pie",
                     data: {
                         labels: label,
                         datasets:[{
@@ -206,6 +214,10 @@ statistical.getExposure = function () {
                     }
                 }
                 var barChart = new Chart( cxt, chartSet);
+            }
+        ).fail(
+            function () {
+                statistical.failAction();
             }
         );
     }
@@ -269,6 +281,10 @@ statistical.getByTypeExposure = function () {
                 }
                 var barChart = new Chart( cxt, chartSet);
             }
+        ).fail(
+            function () {
+                statistical.failAction();
+            }
         );
     }
 }
@@ -324,10 +340,17 @@ statistical.getEntry = function () {
                 }
                 var barChart = new Chart( cxt, chartSet);
             }
+        ).fail(
+            function () {
+                statistical.failAction();
+            }
         );
     }
 }
 statistical.getDate = function(dateNumber){
     var day = new Date(dateNumber);
-    return day.getDate() + "/" + day.getMonth() + "/" + day.getFullYear();
+    return day.getDate() + "/" + (day.getMonth() + 1) + "/" + day.getFullYear();
+}
+statistical.failAction = function () {
+    $("#locationOfChart").html("<p>Không Có Thống Kê</p>")
 }

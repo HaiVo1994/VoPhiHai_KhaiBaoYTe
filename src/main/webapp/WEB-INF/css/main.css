@@ -1,22 +1,55 @@
+html, body{
+    height: 100%;
+}
 body{
     background-image : url('/img/sky-space-dark-galaxy-2150.jpg');
     background-color: #5a6268;
 }
+header{
+    position: fixed;
+    top:0;
+    left: 0;
+    right: 0;
+    width: 100%;
+    z-index: 1000;
+}
+nav{
+    z-index: 1000;
+}
 footer{
+    clear: both;
     position: fixed;
     left: 0;
     bottom: 0;
     width: 100%;
     color: floralwhite;
+    z-index: 1000;
+}
+main{
+    position: absolute;
+    background-color: whitesmoke;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    padding-top: 5%;
+    padding-bottom: 5%;
+    z-index: 100;
 }
 
 .inside{
     background-color: whitesmoke;
+    width: 100%;
     padding-top: 4%;
     padding-bottom: 5%;
+    margin-left: 0;
+    margin-right: 0;
 }
-h3{
+
+h1,h2,h3,h4,h5{
     text-align: center;
+    margin-right: auto;
+    margin-left: auto;
 }
 .declare_tittle{
     font-weight: bold;
