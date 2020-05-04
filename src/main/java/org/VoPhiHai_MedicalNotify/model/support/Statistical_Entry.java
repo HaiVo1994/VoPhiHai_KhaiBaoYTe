@@ -1,27 +1,29 @@
 package org.VoPhiHai_MedicalNotify.model.support;
 
-public class Statistical_Entry {
-    private String entryId;
-    private Integer value;
+import java.util.Date;
 
-    public Statistical_Entry(String entryId, Integer value) {
-        this.entryId = entryId;
+public class Statistical_Entry {
+    private Date entryDate;
+    private Long value;
+
+    public Statistical_Entry(Date entryDate, Long value) {
+        this.entryDate = entryDate;
         this.value = value;
     }
 
-    public String getEntryId() {
-        return entryId;
+    public Date getEntryDate() {
+        return entryDate;
     }
 
-    public void setEntryId(String entryId) {
-        this.entryId = entryId;
+    public void setEntryDate(Date entryDate) {
+        this.entryDate = entryDate;
     }
 
-    public Integer getValue() {
+    public Long getValue() {
         return value;
     }
 
-    public void setValue(Integer value) {
+    public void setValue(Long value) {
         this.value = value;
     }
 }

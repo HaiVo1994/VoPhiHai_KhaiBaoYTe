@@ -4,12 +4,15 @@ import com.github.cliftonlabs.json_simple.JsonObject;
 import org.VoPhiHai_MedicalNotify.model.Entry;
 import org.VoPhiHai_MedicalNotify.model.Exposure;
 import org.VoPhiHai_MedicalNotify.model.HistoryOfExposure;
+import org.VoPhiHai_MedicalNotify.model.support.Statistical;
 import org.VoPhiHai_MedicalNotify.repository.HistoryOfExposureRepository;
 import org.VoPhiHai_MedicalNotify.service.EntryService;
 import org.VoPhiHai_MedicalNotify.service.ExposureService;
 import org.VoPhiHai_MedicalNotify.service.HistoryOfExposureService;
 import org.springframework.beans.factory.annotation.Autowired;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.*;
 
 public class HistoryOfExposureServiceImpl implements HistoryOfExposureService {
@@ -55,14 +58,14 @@ public class HistoryOfExposureServiceImpl implements HistoryOfExposureService {
             for (LinkedHashMap<String,String> history: historyOfExposures){
                 historyOfExposure = new HistoryOfExposure();
                 historyOfExposure.setDateDeclare(current);
-                checkExposure = String.valueOf(history.get("hasExposure"));
+                checkExposure = history.get("hasExposure");
                 if (checkExposure.equals("1")){
                     historyOfExposure.setHasExposure(true);
                 }
                 else {
                     historyOfExposure.setHasExposure(false);
                 }
-                historyOfExposure = this.create(historyOfExposure, entry, mapExposure.get(String.valueOf(history.get("exposure"))));
+                historyOfExposure = this.create(historyOfExposure, entry, mapExposure.get(history.get("exposure")));
                 historyOfExposureList.add(historyOfExposure);
             }
             return historyOfExposureList;
@@ -78,6 +81,69 @@ public class HistoryOfExposureServiceImpl implements HistoryOfExposureService {
 
     @Override
     public List<Entry> getListEntryHaveExposureById(Date begin, Date end, Long exposureId) {
+        return null;
+    }
+
+    @Override
+    public List<JsonObject> statisticalByCountPerson(Date begin, Date end) {
+        List<Statistical> statisticalList = historyOfExposureRepository.statisticalByAmountPeople(begin, end);
+        HashMap<Long,Long> symptomCount = new HashMap<>();
+        long newValue;
+        for(Statistical statistical_entry : statisticalList){
+            symptomCount.computeIfAbsent(statistical_entry.getCount(), k -> (long) 0);
+            newValue = symptomCount.get(statistical_entry.getCount()) + 1;
+            symptomCount.put(statistical_entry.getCount(), newValue);
+        }
+
+        List<JsonObject> result = new ArrayList<>();
+        symptomCount.forEach((keyCount, count)->{
+            JsonObject jsonObject = new JsonObject();
+            jsonObject.put("numberSymptom", keyCount);
+            jsonObject.put("amountEntry", count);
+            result.add(jsonObject);
+        });
+        if (result.size()>0)
+            return result;
+        return null;
+    }
+
+    @Override
+    public List<JsonObject> statisticalByCountPerson(JsonObject dateEntry) {
+        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+        try {
+            String date = (String) dateEntry.get("begin");
+            Date begin = dateFormat.parse(date);
+            date = (String) dateEntry.get("end");
+            Date end = dateFormat.parse(date);
+            return this.statisticalByCountPerson(begin,end);
+        } catch (ParseException e) {
+            e.printStackTrace();
+            System.out.println("Lỗi Chuyển Đổi Ngày :");
+        }
+        return null;
+    }
+
+    @Override
+    public List<Statistical> statisticalByTypeExposure(Date begin, Date end) {
+        List<Statistical> result = historyOfExposureRepository.statisticalByTypeExposure(begin,end);
+        if (result.size()>0)
+            return result;
+        return null;
+    }
+
+    @Override
+    public List<Statistical> statisticalByTypeExposure(JsonObject dateEntry) {
+        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+        try {
+            String date = (String) dateEntry.get("begin");
+            Date begin = dateFormat.parse(date);
+            date = (String) dateEntry.get("end");
+            Date end = dateFormat.parse(date);
+            return this.statisticalByTypeExposure(begin,end);
+        } catch (ParseException e) {
+            e.printStackTrace();
+            System.out.println("Lỗi Chuyển Đổi Ngày :");
+        }
         return null;
     }
 }

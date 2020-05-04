@@ -15,9 +15,13 @@
         </div>
         <div class="row">
             <div class="col-sm-12 col-lg-4">
-                <label for="statistical_type">Loại Thống Kê</label>
-                <select class="form-control select_search" id="statistical_type">
-
+                <label for="statistical_type">Thống Kê</label>
+                <select class="custom-select select_search" id="statistical_type">
+                    <option value="bySymptomAmount">Số Người Có Cùng Số Lượng Triệu Chứng</option>
+                    <option value="bySymptomType">Số Người Mắc Triệu Chứng</option>
+                    <option value="byExposureAmount">Từng Tiếp Xúc Với Cùng Số Nguồn Bệnh</option>
+                    <option value="byExposureType">Số Người Từng Tiếp Xúc Với Loại Nguồn Bệnh</option>
+                    <option value="byEntry">Số Người Nhập Cảnh Theo Ngày</option>
                 </select>
             </div>
             <div class="col-sm-6 col-lg-3">
@@ -32,7 +36,7 @@
                 <button type="button" class="btn btn-primary" onclick="draw()">Thống Kê</button>
             </div>
         </div>
-        <div class="row">
+        <div class="row" id="locationOfChart">
             <canvas id="statisticalChart" width="100%" height="40"></canvas>
 
         </div>
@@ -49,7 +53,24 @@
         }
     );
     function draw() {
-        statistical.getSymptom();
+        var typeStatical = $("#statistical_type").val();
+        switch (typeStatical) {
+            case "bySymptomAmount":
+                statistical.getSymptom();
+                break;
+            case "bySymptomType":
+                statistical.getByTypeSymptom();
+                break;
+            case "byExposureAmount":
+                statistical.getExposure();
+                break;
+            case "byExposureType":
+                statistical.getByTypeExposure();
+                break;
+            case "byEntry":
+                statistical.getEntry();
+                break;
+        }
     }
 </script>
 </body>

@@ -4,6 +4,7 @@ import com.github.cliftonlabs.json_simple.JsonObject;
 import org.VoPhiHai_MedicalNotify.model.Entry;
 import org.VoPhiHai_MedicalNotify.model.Status;
 import org.VoPhiHai_MedicalNotify.model.Symptom;
+import org.VoPhiHai_MedicalNotify.model.support.Statistical;
 
 import java.util.Date;
 import java.util.LinkedHashMap;
@@ -20,4 +21,6 @@ public interface StatusService {
 
     List<JsonObject> statisticalByCountSymptom(Date begin, Date end);
     List<JsonObject> statisticalByCountSymptom(JsonObject dateEntry);
+    List<Statistical> statisticalByTypeSymptom(Date begin, Date end);
+    List<Statistical> statisticalByTypeSymptom(JsonObject dateEntry);
 }

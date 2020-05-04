@@ -123,4 +123,28 @@ public class StatusServiceImpl implements StatusService {
         }
         return null;
     }
+
+    @Override
+    public List<Statistical> statisticalByTypeSymptom(Date begin, Date end) {
+        List<Statistical> result = statusRepository.countForSymptomType(begin,end);
+        if (result.size()>0)
+            return result;
+        return null;
+    }
+
+    @Override
+    public List<Statistical> statisticalByTypeSymptom(JsonObject dateEntry) {
+        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+        try {
+            String date = (String) dateEntry.get("begin");
+            Date begin = dateFormat.parse(date);
+            date = (String) dateEntry.get("end");
+            Date end = dateFormat.parse(date);
+            return this.statisticalByTypeSymptom(begin,end);
+        } catch (ParseException e) {
+            e.printStackTrace();
+            System.out.println("Lỗi Chuyển Đổi Ngày :");
+        }
+        return null;
+    }
 }

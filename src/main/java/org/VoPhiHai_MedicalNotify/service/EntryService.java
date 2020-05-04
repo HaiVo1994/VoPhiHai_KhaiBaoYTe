@@ -5,6 +5,7 @@ import org.VoPhiHai_MedicalNotify.model.Entry;
 import org.VoPhiHai_MedicalNotify.model.Person;
 import org.VoPhiHai_MedicalNotify.model.Transport;
 import org.VoPhiHai_MedicalNotify.model.support.Statistical;
+import org.VoPhiHai_MedicalNotify.model.support.Statistical_Entry;
 
 import java.util.Date;
 import java.util.LinkedHashMap;
@@ -20,4 +21,6 @@ public interface EntryService {
     List<Statistical> statisticalSymptomDeparture(Date begin, Date end);
     List<Statistical> statisticalSymptomDeparture(JsonObject timeFind);
 
+    List<Statistical_Entry> statisticalEntry(Date begin, Date end);
+    List<Statistical_Entry> statisticalEntry(JsonObject timeFind);
 }

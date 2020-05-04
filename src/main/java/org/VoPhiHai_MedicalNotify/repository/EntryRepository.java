@@ -17,4 +17,11 @@ public interface EntryRepository extends CrudRepository<Entry,String> {
             "WHERE (e.departureDate >= :startDate) AND (e.departureDate<= :endDate)" +
             "GROUP BY (e.statuses.size)")
     List<Statistical> statisticalSymptomDeparture(@Param("startDate") Date begin, @Param("endDate") Date end);
+
+    @Query("SELECT new org.VoPhiHai_MedicalNotify.model.support.Statistical_Entry(e.departureDate,COUNT(e)) " +
+            "FROM Entry e " +
+            "WHERE (e.departureDate >= :startDate) AND (e.departureDate<= :endDate)" +
+            "GROUP BY e.departureDate " +
+            "ORDER BY e.departureDate asc ")
+    List<Statistical_Entry> statisticalEntry(@Param("startDate") Date begin, @Param("endDate") Date end);
 }

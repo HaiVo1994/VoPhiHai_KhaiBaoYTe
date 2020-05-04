@@ -3,6 +3,7 @@ package org.VoPhiHai_MedicalNotify.service.impl;
 import com.github.cliftonlabs.json_simple.JsonObject;
 import org.VoPhiHai_MedicalNotify.model.*;
 import org.VoPhiHai_MedicalNotify.model.support.Statistical;
+import org.VoPhiHai_MedicalNotify.model.support.Statistical_Entry;
 import org.VoPhiHai_MedicalNotify.repository.EntryRepository;
 import org.VoPhiHai_MedicalNotify.service.*;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -119,6 +120,30 @@ public class EntryServiceImpl implements EntryService {
             date = (String) timeFind.get("end");
             Date end = dateFormat.parse(date);
             return this.statisticalSymptomDeparture(begin,end);
+        } catch (ParseException e) {
+            e.printStackTrace();
+            System.out.println("Lỗi Chuyển Đổi Ngày :");
+        }
+        return null;
+    }
+
+    @Override
+    public List<Statistical_Entry> statisticalEntry(Date begin, Date end) {
+        List<Statistical_Entry> listResult = entryRepository.statisticalEntry(begin, end);
+        if (listResult.size()>0)
+            return listResult;
+        return null;
+    }
+
+    @Override
+    public List<Statistical_Entry> statisticalEntry(JsonObject timeFind) {
+        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+        try {
+            String date = (String) timeFind.get("begin");
+            Date begin = dateFormat.parse(date);
+            date = (String) timeFind.get("end");
+            Date end = dateFormat.parse(date);
+            return this.statisticalEntry(begin,end);
         } catch (ParseException e) {
             e.printStackTrace();
             System.out.println("Lỗi Chuyển Đổi Ngày :");

@@ -115,6 +115,6 @@ value.getDeclare = function () {
         transport: value.getTransport(),
         entry: value.getEntry(),
         status: value.getStatuses(),
-        historyOfExposures: value.getStatuses()
+        historyOfExposures: value.getHistoryOfExposure()
     }
 }

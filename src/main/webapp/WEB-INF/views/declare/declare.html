@@ -22,7 +22,7 @@
                     <div class="row">
                         <div class="form-group col-sm-12 col-lg-8">
                             <label for="entry_gate">Cửa khẩu <span>(*)</span></label>
-                            <select class="form-control select_search" name="entry_gate" id="entry_gate">
+                            <select class="custom-select select_search" name="entry_gate" id="entry_gate">
                                 <th:block th:each="gate:${gates}">
                                     <option th:value="${gate.id}" th:text="${gate.name}"></option>
                                 </th:block>
@@ -51,12 +51,12 @@
                         </div>
                         <div class="form-group col-sm-12 col-md-4">
                             <label for="person_birthYear">Năm sinh <span>(*)</span></label>
-                            <select class="form-control select_search" name="person_birthYear" id="person_birthYear">
+                            <select class="custom-select select_search" name="person_birthYear" id="person_birthYear">
                             </select>
                         </div>
                         <div class="form-group col-sm-12 col-md-4">
                             <label for="person_gender">Giới tính <span>(*)</span></label>
-                            <select class="form-control" name="person_gender" id="person_gender">
+                            <select class="custom-select" name="person_gender" id="person_gender">
                                 <option value="0">Nam</option>
                                 <option value="1">Nữ</option>
                                 <option value="2">Khác</option>
@@ -64,7 +64,7 @@
                         </div>
                         <div class="form-group col-sm-12 col-md-4">
                             <label for="person_nationality">Quốc tịch <span>(*)</span></label>
-                            <select class="form-control select_search" id="person_nationality" >
+                            <select class="custom-select select_search" id="person_nationality" >
                                 <th:block th:each="nationality:${nationals}">
                                     <option th:value="${nationality.id}" th:text="${nationality.name}"></option>
                                 </th:block>
@@ -75,7 +75,7 @@
                     <div class="row">
                         <div class="form-group">
                             <label for="transportType">Phương tiện <span>(*)</span></label>
-                            <select class="form-control" name="transportType" id="transportType">
+                            <select class="custom-select" name="transportType" id="transportType">
                                 <th:block th:each="transportType:${transportTypes}">
                                     <option th:value="${transportType.id}" th:text="${transportType.name}"></option>
                                 </th:block>
@@ -110,7 +110,7 @@
                         </div>
                         <div class="form-group col-sm-6">
                             <label for="national_Departure">Quốc gia/ Vùng lãnh thổ <span>(*)</span></label>
-                            <select class="form-control select_search"
+                            <select class="custom-select select_search"
                                     name="national_Departure" id="national_Departure">
                                 <th:block th:each="national:${nationals}">
                                     <option th:value="${national.id}" th:text="${national.name}"></option>
@@ -119,7 +119,7 @@
                         </div>
                         <div class="form-group col-sm-6">
                             <label for="entry_provinceDeparture">Tỉnh <span>(*)</span></label>
-                            <select class="form-control select_search"
+                            <select class="custom-select select_search"
                                     name="entry_provinceDeparture" id="entry_provinceDeparture">
                             </select>
                         </div>
@@ -128,7 +128,7 @@
                         </div>
                         <div class="form-group col-sm-6">
                             <label for="national_destination">Quốc gia/ Vùng lãnh thổ <span>(*)</span></label>
-                            <select class="form-control select_search"
+                            <select class="custom-select select_search"
                                     name="national_destination" id="national_destination">
                                 <th:block th:each="national:${nationals}">
                                     <option th:value="${national.id}" th:text="${national.name}"></option>
@@ -137,7 +137,7 @@
                         </div>
                         <div class="form-group col-sm-6">
                             <label for="entry_provinceDestination">Tỉnh <span>(*)</span></label>
-                            <select class="form-control select_search"
+                            <select class="custom-select select_search"
                                     name="entry_provinceDestination" id="entry_provinceDestination">
                             </select>
                         </div>
@@ -145,7 +145,7 @@
                             <label for="entry_placeTravel">
                                 Trong vòng 14 ngày qua, Anh/Chị có đến quốc gia/vùng lãnh thổ nào? <span>(*)</span>
                             </label>
-                            <select class="form-control select_search"
+                            <select class="custom-select select_search"
                                     name="entry_placeTravel[]" multiple="multiple" id="entry_placeTravel">
                                 <th:block th:each="national:${nationals}">
                                     <option th:value="${national.name}" th:text="${national.name}"></option>
@@ -159,19 +159,19 @@
                         </div>
                         <div class="col-sm-12 col-lg-3 form-group">
                             <label for="contact_Province">Tỉnh <span>(*)</span></label>
-                            <select class="form-control select_search"
+                            <select class="custom-select select_search"
                                     name="contact_Province" id="contact_Province">
                             </select>
                         </div>
                         <div class="col-sm-12 col-lg-3 form-group">
                             <label for="contact_District">Quận / huyện <span>(*)</span></label>
-                            <select class="form-control select_search"
+                            <select class="custom-select select_search"
                                     name="contact_District" id="contact_District">
                             </select>
                         </div>
                         <div class="col-sm-12 col-lg-3 form-group">
                             <label for="contact_District">Phường / xã  <span>(*)</span></label>
-                            <select class="form-control select_search"
+                            <select class="custom-select select_search"
                                     name="contact_Location" id="contact_Location">
                             </select>
                         </div>
