@@ -8,42 +8,44 @@
 </head>
 <body>
 <header th:replace="layout::topBar"></header>
-<main role="main" class="container main-contain">
-    <div class="container-fluid h-auto inside">
-        <div class="row">
+<main role="main" class="container main-contain" id="main">
+    <div id="inside" class="container-fluid">
+        <div class="row text-center">
             <h1>Thống Kê</h1>
         </div>
-        <div class="row">
-            <div class="col-12 form-group">
-                <label for="statistical_type">Thống Kê</label>
-                <select class="custom-select select_search" id="statistical_type">
-                    <option value="bySymptomAmount">Số Người Có Cùng Số Lượng Triệu Chứng</option>
-                    <option value="bySymptomType">Số Người Mắc Triệu Chứng</option>
-                    <option value="byExposureAmount">Từng Tiếp Xúc Với Cùng Số Nguồn Bệnh</option>
-                    <option value="byExposureType">Số Người Từng Tiếp Xúc Với Loại Nguồn Bệnh</option>
-                    <option value="byEntry">Số Người Nhập Cảnh Theo Ngày</option>
-                </select>
-            </div>
-        </div>
-        <form id="formStatistical">
+        <div class="container-fluid">
             <div class="row">
-                <div class="col-sm-6 col-lg-5 form-group">
-                    <label for="beginDate">Từ Ngày</label>
-                    <input type="date" class="form-control" id="beginDate">
-                </div>
-                <div class="col-sm-6 col-lg-5 form-group">
-                    <label for="endDate">Từ Ngày</label>
-                    <input type="date" class="form-control" id="endDate">
-                </div>
-                <div class="col-12 col-lg-2 form-group">
-                    <button type="button" class="btn btn-primary" onclick="draw()">Thống Kê</button>
+                <div class="col-12 form-group">
+                    <label for="statistical_type">Thống Kê</label>
+                    <select class="select_search custom-select" id="statistical_type">
+                        <option value="bySymptomAmount">Số Người Có Cùng Số Lượng Triệu Chứng</option>
+                        <option value="bySymptomType">Số Người Mắc Triệu Chứng</option>
+                        <option value="byExposureAmount">Từng Tiếp Xúc Với Cùng Số Nguồn Bệnh</option>
+                        <option value="byExposureType">Số Người Từng Tiếp Xúc Với Loại Nguồn Bệnh</option>
+                        <option value="byEntry">Số Người Nhập Cảnh Theo Ngày</option>
+                    </select>
                 </div>
             </div>
-        </form>
-        <div class="row" id="locationOfChart">
-            <canvas id="statisticalChart" width="100%" height="40"></canvas>
-
+            <form id="formStatistical">
+                <div class="row">
+                    <div class="col-sm-6 form-group">
+                        <label for="beginDate">Từ Ngày</label>
+                        <input type="date" class="form-control" id="beginDate">
+                    </div>
+                    <div class="col-sm-6 form-group">
+                        <label for="endDate">Từ Ngày</label>
+                        <input type="date" class="form-control" id="endDate">
+                    </div>
+                </div>
+            </form>
+            <div class="row text-center">
+                <button type="button" class="btn btn-primary" onclick="draw()">Thống Kê</button>
+            </div>
+            <div class="row" id="locationOfChart">
+                <canvas id="statisticalChart" width="100%" height="50"></canvas>
+            </div>
         </div>
+
     </div>
 </main>
 <footer th:replace="layout::bottomBar"></footer>
@@ -53,7 +55,6 @@
 <script>
     $(document).ready(
         function () {
-            $(".select_search").select2();
             statistical.setValidate();
         }
     );

@@ -17,7 +17,6 @@ nav{
     z-index: 1000;
 }
 footer{
-    clear: both;
     position: fixed;
     left: 0;
     bottom: 0;
@@ -25,28 +24,52 @@ footer{
     color: floralwhite;
     z-index: 1000;
 }
-main{
+#main{
     position: absolute;
     background-color: whitesmoke;
     top: 0;
     bottom: 0;
     left: 0;
     right: 0;
-    padding-top: 5%;
-    padding-bottom: 5%;
+    /*overflow-y: scroll;*/
+    /*overflow-x: visible;*/
+    /*padding-top: 2%;*/
+    /*padding-bottom: 2%;*/
     z-index: 100;
 }
 
-.inside{
-    background-color: whitesmoke;
-    width: 100%;
+/* width */
+::-webkit-scrollbar {
+    width: 1%;
+    height:1%;
+}
+
+/* Track */
+::-webkit-scrollbar-track {
+    box-shadow: inset 0 0 5px grey;
+    border-radius: 10px;
+}
+
+/* Handle */
+::-webkit-scrollbar-thumb {
+    background: #8a8a8a;
+    border-radius: 10px;
+}
+
+/* Handle on hover */
+::-webkit-scrollbar-thumb:hover {
+    background: #04979c;
+}
+
+#inside{
+    /*background-color: whitesmoke;*/
     padding-top: 4%;
-    padding-bottom: 5%;
+    padding-bottom: 4%;
     margin-left: 0;
     margin-right: 0;
 }
 
-h1,h2,h3,h4,h5{
+h1,h2,h3,h4,h5, button{
     text-align: center;
     margin-right: auto;
     margin-left: auto;
@@ -61,3 +84,7 @@ label span{
 .test{
     color: rgba(223,49,240,0.76);
 }
+/*#locationOfChart{*/
+/*    width: 100%;*/
+/*    height: auto;*/
+/*}*/

@@ -25,24 +25,19 @@ statistical.borderColor = [
     'rgba(240,57,84,1)',
     'rgba(223,49,240,1)'
 ];
-
+statistical.location = $("#locationOfChart");
+statistical.canvasValue = function () {
+    statistical.location.html("<canvas id=\"statisticalChart\" width=\"100%\" height=\"50\"></canvas>");
+    // var insideHeight = $("#statisticalChart").height() + staticPart.inside.height(),
+    //     windowHeight = $(window).height() - staticPart.header.height() - staticPart.footer.height();
+    // if (insideHeight>windowHeight)
+    //     staticPart.main.css("height", insideHeight);
+    // else
+    //     staticPart.main.css("height", windowHeight);
+    // staticPart.changeSizeOfMain();
+};
 statistical.setValidate = function(){
-    jQuery.validator.addMethod("endStatisticalDate",
-        function (value, element, params) {
-            if (!/Invalid|NaN/.test(new Date(value))) {
-                return new Date(value) >= new Date($(params).val());
-            }
-            return isNaN(value) && isNaN($(params).val())
-                || (Number(value) >= Number($(params).val()));
-        },"Ngày Kết Thúc Phải Lớn Hơn Hoặc Bằng Ngày Bắt Đầu");
-    jQuery.validator.addMethod("dateSelect",
-        function (value, element) {
-            var today = new Date();
-            if (!/Invalid|NaN/.test(new Date(value))) {
-                return new Date(value) <= today;
-            }
-            return isNaN(value) || (Number(value) > Number(today));
-        },"Ngày Được Chọn Phải Là Ngày Hôm Nay Hoặc Trước Đó");
+
     $("#formStatistical").validate();
     $("#beginDate").rules("add",
         {
@@ -72,7 +67,7 @@ statistical.getSymptom = function () {
     var dateBegin = $("#beginDate"),
         dateEnd = $("#endDate");
     if (dateBegin.valid() && dateEnd.valid()){
-        $("#locationOfChart").html("<canvas id=\"statisticalChart\" width=\"100%\" height=\"40\"></canvas>");
+        statistical.canvasValue();
         var dateRange = {
             begin:dateBegin.val(),
             end:dateEnd.val()
@@ -128,6 +123,7 @@ statistical.getSymptom = function () {
                     }
                 }
                 var barChart = new Chart( cxt, chartSet);
+                staticPart.changeSizeOfMain();
             }
         ).fail(
             function () {
@@ -141,7 +137,7 @@ statistical.getByTypeSymptom = function () {
     var dateBegin = $("#beginDate"),
         dateEnd = $("#endDate");
     if (dateBegin.valid() && dateEnd.valid()){
-        $("#locationOfChart").html("<canvas id=\"statisticalChart\" width=\"100%\" height=\"40\"></canvas>");
+        statistical.canvasValue();
         var dateRange = {
             begin:dateBegin.val(),
             end:dateEnd.val()
@@ -198,6 +194,7 @@ statistical.getByTypeSymptom = function () {
                     }
                 }
                 var barChart = new Chart( cxt, chartSet);
+                staticPart.changeSizeOfMain();
             }
         ).fail(
             function () {
@@ -212,7 +209,7 @@ statistical.getExposure = function () {
     var dateBegin = $("#beginDate"),
         dateEnd = $("#endDate");
     if (dateBegin.valid() && dateEnd.valid()){
-        $("#locationOfChart").html("<canvas id=\"statisticalChart\" width=\"100%\" height=\"40\"></canvas>");
+        statistical.canvasValue();
         var dateRange = {
             begin:dateBegin.val(),
             end:dateEnd.val()
@@ -268,6 +265,7 @@ statistical.getExposure = function () {
                     }
                 }
                 var barChart = new Chart( cxt, chartSet);
+                staticPart.changeSizeOfMain();
             }
         ).fail(
             function () {
@@ -281,7 +279,7 @@ statistical.getByTypeExposure = function () {
     var dateBegin = $("#beginDate"),
         dateEnd = $("#endDate");
     if (dateBegin.valid() && dateEnd.valid()){
-        $("#locationOfChart").html("<canvas id=\"statisticalChart\" width=\"100%\" height=\"40\"></canvas>");
+        statistical.canvasValue();
         var dateRange = {
             begin:dateBegin.val(),
             end:dateEnd.val()
@@ -338,6 +336,7 @@ statistical.getByTypeExposure = function () {
                     }
                 }
                 var barChart = new Chart( cxt, chartSet);
+                staticPart.changeSizeOfMain();
             }
         ).fail(
             function () {
@@ -351,7 +350,7 @@ statistical.getEntry = function () {
     var dateBegin = $("#beginDate"),
         dateEnd = $("#endDate");
     if (dateBegin.valid() && dateEnd.valid()){
-        $("#locationOfChart").html("<canvas id=\"statisticalChart\" width=\"100%\" height=\"40\"></canvas>");
+        statistical.canvasValue();
         var dateRange = {
             begin:dateBegin.val(),
             end:dateEnd.val()
@@ -402,6 +401,7 @@ statistical.getEntry = function () {
                     }
                 }
                 var barChart = new Chart( cxt, chartSet);
+                staticPart.changeSizeOfMain();
             }
         ).fail(
             function () {

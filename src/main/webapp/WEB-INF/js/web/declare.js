@@ -298,39 +298,33 @@ declare.setValidate = function(){
            }
         });
 
-    jQuery.validator.addMethod("startDate",
-        function (value, element, params) {
-            if (!/Invalid|NaN/.test(new Date(value))) {
-                return new Date(value) <= new Date($(params).val());
-            }
-            return isNaN(value) && isNaN($(params).val())
-                || (Number(value) <= Number($(params).val()));
-        },"Ngày xuất phát phải trước hoặc giống ngày nhập cảnh");
+    // jQuery.validator.addMethod("startDate",
+    //     function (value, element, params) {
+    //         if (!/Invalid|NaN/.test(new Date(value))) {
+    //             return new Date(value) <= new Date($(params).val());
+    //         }
+    //         return isNaN(value) && isNaN($(params).val())
+    //             || (Number(value) <= Number($(params).val()));
+    //     },"Ngày xuất phát phải trước hoặc giống ngày nhập cảnh");
     $("#entry_departureDate").rules("add",
         {
             required:true,
-            startDate: $("#entry_immigrationDate"),
+            dateSelect:true,
             messages:{
                 required: "Bạn phải nhập ngày xuất phát",
-                startDate: "Ngày xuất phát phải trước hoặc giống ngày nhập cảnh"
+                dateSelect: "Ngày Xuất Phát Phải Là Ngày Hôm Nay Hoặc Trước Đó"
             }
         });
 
-    jQuery.validator.addMethod("endDate",
-        function (value, element) {
-            var today = new Date();
-            if (!/Invalid|NaN/.test(new Date(value))) {
-                return new Date(value) <= today;
-            }
-            return isNaN(value) || (Number(value) > Number(today));
-        },"Ngày nhập cảnh phải là ngày hôm nay hoặc trước đó");
     $("#entry_immigrationDate").rules("add",
         {
             required:true,
-            endDate: true,
+            dateSelect: true,
+            endStatisticalDate: $("#entry_departureDate"),
             messages:{
                 required: "Bạn phải nhập ngày nhập cảnh",
-                endDate: "Ngày nhập cảnh phải là ngày hôm nay hoặc trước đó"
+                dateSelect: "Ngày nhập cảnh phải là ngày hôm nay hoặc trước đó",
+                endStatisticalDate: "Ngày Nhập Cảnh Phải Sau Hoặc Giống Với Ngày Xuất Phát"
             }
         }
         );
