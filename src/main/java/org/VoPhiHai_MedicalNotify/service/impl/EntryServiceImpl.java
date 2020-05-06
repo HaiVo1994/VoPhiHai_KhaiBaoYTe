@@ -150,4 +150,9 @@ public class EntryServiceImpl implements EntryService {
         }
         return null;
     }
+
+    @Override
+    public List<Entry> getByImmigrationDate(Date begin, Date end) {
+        return entryRepository.getEntriesByImmigrationDate(begin,end);
+    }
 }

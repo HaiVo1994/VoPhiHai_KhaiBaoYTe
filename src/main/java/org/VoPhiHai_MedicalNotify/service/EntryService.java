@@ -23,4 +23,6 @@ public interface EntryService {
 
     List<Statistical_Entry> statisticalEntry(Date begin, Date end);
     List<Statistical_Entry> statisticalEntry(JsonObject timeFind);
+
+    List<Entry> getByImmigrationDate(Date begin, Date end);
 }

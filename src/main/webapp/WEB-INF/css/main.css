@@ -74,11 +74,17 @@ h1,h2,h3,h4,h5, button{
     margin-right: auto;
     margin-left: auto;
 }
+h1,h2,h3,h4,h5{
+    color: rgba(45,41,101,0.9);
+}
 .declare_tittle{
     font-weight: bold;
     font-size: medium;
 }
-label span{
+.main_label,.declare_tittle, p, small{
+    color: #1b1e21;
+}
+.main_label span{
     color: red;
 }
 .test{

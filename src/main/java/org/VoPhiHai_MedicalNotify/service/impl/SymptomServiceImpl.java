@@ -24,6 +24,11 @@ public class SymptomServiceImpl implements SymptomService {
     }
 
     @Override
+    public Symptom findByName(String name) {
+        return symptomRepository.findByNameAndEnabled(name);
+    }
+
+    @Override
     public List<Symptom> findAllEnable() {
         return symptomRepository.getAllEnabled();
     }

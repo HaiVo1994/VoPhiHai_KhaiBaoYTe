@@ -48,6 +48,52 @@
 
     </div>
 </main>
+
+<div class="modal fade" id="messengerErrorModal" tabindex="-1" role="dialog" aria-labelledby="errorTittle" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="errorTittle">Không Có Dữ Liệu Để Vẽ Biểu Đồ</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div id="modal_messenger_error" class="text-center">
+
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Đóng</button>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="modal fade" id="listPerson" tabindex="-1" role="dialog" aria-labelledby="listPerson_tittle" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="listPerson_tittle">Không Có Dữ Liệu Để Vẽ Biểu Đồ</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div id="tableForListPerson" class="text-center row">
+
+                </div>
+                <div class="row">
+                    <ul class="pagination" id="pagingForTable">
+
+                    </ul>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Đóng</button>
+            </div>
+        </div>
+    </div>
+</div>
 <footer th:replace="layout::bottomBar"></footer>
 <th:block th:replace="layout::jsAll"></th:block>
 <script th:src="@{/js/chart/Chart.js}"></script>

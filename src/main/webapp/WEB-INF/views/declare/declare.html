@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <title>Khai Báo Y Tế</title>
     <th:block th:replace="layout::cssAll"></th:block>
+    <link type="text/css" rel="stylesheet" th:href="@{/css/radioButton.css}">
 </head>
 <body>
     <header th:replace="layout::topBar"></header>
@@ -21,7 +22,7 @@
                 <form id="formDeclare" method="post">
                     <div class="row">
                         <div class="form-group col-sm-12 col-lg-8">
-                            <label for="entry_gate">Cửa khẩu <span>(*)</span></label>
+                            <label for="entry_gate" class="main_label">Cửa khẩu <span>(*)</span></label>
                             <select class="select_search custom-select" name="entry_gate" id="entry_gate">
                                 <th:block th:each="gate:${gates}">
                                     <option th:value="${gate.id}" th:text="${gate.name}"></option>
@@ -32,7 +33,7 @@
                     </div>
                     <div class="row">
                         <div class="form-group col-sm-12 col-md-8">
-                            <label for="person_legalDocument">Số hộ chiếu hoặc giấy thông hành hợp pháp khác <span>(*)</span></label>
+                            <label for="person_legalDocument" class="main_label">Số hộ chiếu hoặc giấy thông hành hợp pháp khác <span>(*)</span></label>
                             <input type="text" class="form-control" name="person_legalDocument"
                                    id="person_legalDocument" maxlength="50">
                         </div>
@@ -45,17 +46,17 @@
                     </div>
                     <div class="row">
                         <div class="form-group col-sm-12 col-md-8">
-                            <label for="person_name">Họ tên <span>(*)</span></label>
+                            <label for="person_name" class="main_label">Họ tên <span>(*)</span></label>
                             <input type="text" class="form-control" name="person_name"
                                    id="person_name" maxlength="200">
                         </div>
                         <div class="form-group col-sm-12 col-md-4">
-                            <label for="person_birthYear">Năm sinh <span>(*)</span></label>
+                            <label for="person_birthYear" class="main_label">Năm sinh <span>(*)</span></label>
                             <select class="select_search custom-select" name="person_birthYear" id="person_birthYear">
                             </select>
                         </div>
                         <div class="form-group col-sm-12 col-md-4">
-                            <label for="person_gender">Giới tính <span>(*)</span></label>
+                            <label for="person_gender" class="main_label">Giới tính <span>(*)</span></label>
                             <select class="custom-select" name="person_gender" id="person_gender">
                                 <option value="0">Nam</option>
                                 <option value="1">Nữ</option>
@@ -63,7 +64,7 @@
                             </select>
                         </div>
                         <div class="form-group col-sm-12 col-md-4">
-                            <label for="person_nationality">Quốc tịch <span>(*)</span></label>
+                            <label for="person_nationality" class="main_label">Quốc tịch <span>(*)</span></label>
                             <select class="select_search custom-select" id="person_nationality" >
                                 <th:block th:each="nationality:${nationals}">
                                     <option th:value="${nationality.id}" th:text="${nationality.name}"></option>
@@ -74,7 +75,7 @@
 
                     <div class="row">
                         <div class="form-group">
-                            <label for="transportType">Phương tiện <span>(*)</span></label>
+                            <label for="transportType" class="main_label">Phương tiện <span>(*)</span></label>
                             <select class="custom-select" name="transportType" id="transportType">
                                 <th:block th:each="transportType:${transportTypes}">
                                     <option th:value="${transportType.id}" th:text="${transportType.name}"></option>
@@ -82,26 +83,26 @@
                             </select>
                         </div>
                         <div class="form-group col-sm-12">
-                            <label for="transport_note">Ghi chú (Cho phương tiện di chuyển)</label>
+                            <label for="transport_note" class="main_label">Ghi chú (Cho phương tiện di chuyển)</label>
                             <textarea type="text" class="form-control" name="transport_note" id="transport_note"></textarea>
                         </div>
                         <div class="form-group col-sm-12 col-lg-6">
-                            <label for="transport_transportationNo">Số hiệu phương tiện</label>
+                            <label for="transport_transportationNo" class="main_label">Số hiệu phương tiện</label>
                             <input type="text" class="form-control"
                                    name="transport_transportationNo" id="transport_transportationNo" maxlength="72">
                         </div>
-                        <div class="form-group col-sm-12 col-lg-6">
-                            <label for="entry_seatNo">Số ghế</label>
+                        <div class="form-group col-sm-12 col-lg-6" >
+                            <label for="entry_seatNo" class="main_label">Số ghế</label>
                             <input type="text" class="form-control"
                                    name="entry_seatNo" id="entry_seatNo" maxlength="32">
                         </div>
                         <div class="form-group col-sm-12 col-lg-6">
-                            <label for="entry_departureDate">Ngày khởi hành <span>(*)</span></label>
+                            <label for="entry_departureDate" class="main_label">Ngày khởi hành <span>(*)</span></label>
                             <input type="date" class="form-control"
                                    name="entry_departureDate" id="entry_departureDate">
                         </div>
                         <div class="form-group col-sm-12 col-lg-6">
-                            <label for="entry_immigrationDate">Ngày nhập cảnh <span>(*)</span></label>
+                            <label for="entry_immigrationDate" class="main_label">Ngày nhập cảnh <span>(*)</span></label>
                             <input type="date" class="form-control"
                                    name="entry_immigrationDate" id="entry_immigrationDate">
                         </div>
@@ -109,7 +110,7 @@
                             <p>Địa điểm khởi hành (tỉnh/quốc gia)</p>
                         </div>
                         <div class="form-group col-12 col-sm-12 col-md-6 col-lg-6 col-xl-6">
-                            <label for="national_Departure">Quốc gia/ Vùng lãnh thổ <span>(*)</span></label>
+                            <label for="national_Departure" class="main_label">Quốc gia/ Vùng lãnh thổ <span>(*)</span></label>
                             <select class="select_search custom-select"
                                     name="national_Departure" id="national_Departure">
                                 <th:block th:each="national:${nationals}">
@@ -118,7 +119,7 @@
                             </select>
                         </div>
                         <div class="form-group col-12 col-sm-12 col-md-6 col-lg-6 col-xl-6">
-                            <label for="entry_provinceDeparture">Tỉnh <span>(*)</span></label>
+                            <label for="entry_provinceDeparture" class="main_label">Tỉnh <span>(*)</span></label>
                             <select class="select_search custom-select"
                                     name="entry_provinceDeparture" id="entry_provinceDeparture">
                             </select>
@@ -127,7 +128,7 @@
                             <p>Địa điểm nơi đến (tỉnh/quốc gia)</p>
                         </div>
                         <div class="form-group col-12 col-sm-12 col-md-6 col-lg-6 col-xl-6">
-                            <label for="national_destination">Quốc gia/ Vùng lãnh thổ <span>(*)</span></label>
+                            <label for="national_destination" class="main_label">Quốc gia/ Vùng lãnh thổ <span>(*)</span></label>
                             <select class="select_search custom-select"
                                     name="national_destination" id="national_destination">
                                 <th:block th:each="national:${nationals}">
@@ -136,13 +137,13 @@
                             </select>
                         </div>
                         <div class="form-group col-12 col-sm-12 col-md-6 col-lg-6 col-xl-6">
-                            <label for="entry_provinceDestination">Tỉnh <span>(*)</span></label>
+                            <label for="entry_provinceDestination" class="main_label">Tỉnh <span>(*)</span></label>
                             <select class="select_search custom-select"
                                     name="entry_provinceDestination" id="entry_provinceDestination">
                             </select>
                         </div>
                         <div class="col-12 col-sm-12 col-md-12 col-lg-12 col-xl-12">
-                            <label for="entry_placeTravel">
+                            <label for="entry_placeTravel" class="main_label">
                                 Trong vòng 14 ngày qua, Anh/Chị có đến quốc gia/vùng lãnh thổ nào? <span>(*)</span>
                             </label>
                             <select class="select_search custom-select"
@@ -158,25 +159,25 @@
                             <p class="declare_tittle">Địa chỉ liên lạc tại Việt Nam<p>
                         </div>
                         <div class="col-sm-12 col-lg-3 form-group">
-                            <label for="contact_Province">Tỉnh <span>(*)</span></label>
+                            <label for="contact_Province" class="main_label">Tỉnh <span>(*)</span></label>
                             <select class="select_search custom-select"
                                     name="contact_Province" id="contact_Province">
                             </select>
                         </div>
                         <div class="col-sm-12 col-lg-3 form-group">
-                            <label for="contact_District">Quận / huyện <span>(*)</span></label>
+                            <label for="contact_District" class="main_label">Quận / huyện <span>(*)</span></label>
                             <select class="select_search custom-select"
                                     name="contact_District" id="contact_District">
                             </select>
                         </div>
                         <div class="col-sm-12 col-lg-3 form-group">
-                            <label for="contact_District">Phường / xã  <span>(*)</span></label>
+                            <label for="contact_District" class="main_label">Phường / xã  <span>(*)</span></label>
                             <select class="select_search custom-select"
                                     name="contact_Location" id="contact_Location">
                             </select>
                         </div>
                         <div class="col-sm-12 form-group">
-                            <label for="contact_address">
+                            <label for="contact_address" class="main_label">
                                 Địa chỉ nơi ở tại Việt Nam <span>(*)</span>
                             </label>
                             <textarea type="text" class="form-control"
@@ -188,12 +189,12 @@
                             </small>
                         </div>
                         <div class="col-sm-12 col-lg-6">
-                            <label for="contact_phone">Điện thoại <span>(*)</span></label>
+                            <label for="contact_phone" class="main_label">Điện thoại <span>(*)</span></label>
                             <input type="tel" class="form-control"
                                    name="contact_phone" id="contact_phone">
                         </div>
                         <div class="col-sm-12 col-lg-6">
-                            <label for="contact_email">Email </label>
+                            <label for="contact_email" class="main_label">Email </label>
                             <input type="email" class="form-control"
                                    name="contact_email" id="contact_email">
                         </div>
@@ -207,22 +208,86 @@
                                 <table class="table">
                                     <thead>
                                     <tr>
-                                        <th style="width: 80%">Triệu chứng</th>
-                                        <th style="width: 10%">Có</th>
-                                        <th style="width: 10%">Không</th>
+                                        <th style="width: 60%">Triệu chứng</th>
+                                        <th style="width: 20%">Có</th>
+                                        <th style="width: 20%">Không</th>
                                     </tr>
                                     </thead>
                                     <tbody>
                                     <tr th:each="symptom:${symptoms}">
                                         <td th:text="${symptom.name}">
                                         </td>
+<!--                                        <td>-->
+<!--                                            <input type="radio" class="form-check-input symptom_checkbox"-->
+<!--                                                   th:name="${'symptom:' + symptom.id}" th:value="${symptom.id + ',:,1'}">-->
+<!--                                        </td>-->
+<!--                                        <td>-->
+<!--                                            <input type="radio" class="form-check-input symptom_checkbox"-->
+<!--                                                   th:name="${'symptom:' + symptom.id}" th:value="${symptom.id + ',:,0'}">-->
+<!--                                        </td>-->
                                         <td>
-                                            <input type="radio" class="form-check-input symptom_checkbox"
-                                                   th:name="${'symptom:' + symptom.id}" th:value="${symptom.id + ',:,1'}">
+                                            <div class="option">
+                                                <input type="radio" class="symptom_checkbox"
+                                                   th:name="${'symptom:' + symptom.id}" th:value="${symptom.id + ',:,1'}"
+                                                    th:id="${'symptom-y:' + symptom.id}">
+                                                <label th:for="${'symptom-y:' + symptom.id}" aria-label="Dark grey">
+                                                    <span></span>
+                                                    Có
+                                                    <div class="card card--dark card--sm">
+                                                        <div class="card__chip"></div>
+                                                        <div class="card__content">
+                                                            <div class="card__text">
+                                                                <div class="text__row">
+                                                                    <div class="text__loader"></div>
+                                                                    <div class="text__loader"></div>
+                                                                </div>
+                                                                <div class="text__row">
+                                                                    <div class="text__loader"></div>
+                                                                    <div class="text__loader"></div>
+                                                                </div>
+                                                            </div>
+                                                            <div class="card__symbol">
+                                                                <span></span>
+                                                                <span></span>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </label>
+                                            </div>
                                         </td>
                                         <td>
-                                            <input type="radio" class="form-check-input symptom_checkbox"
-                                                   th:name="${'symptom:' + symptom.id}" th:value="${symptom.id + ',:,0'}">
+                                            <div class="option">
+                                                <input type="radio" class="symptom_checkbox"
+                                                       checked="checked"
+                                                       th:name="${'symptom:' + symptom.id}"
+                                                       th:value="${symptom.id + ',:,0'}"
+                                                       th:id="${'symptom-n:' + symptom.id}">
+                                                <label th:for="${'symptom-n:' + symptom.id}" aria-label="Royal blue">
+                                                    <span></span>
+
+                                                    Không
+
+                                                    <div class="card card--blue card--sm">
+                                                        <div class="card__chip"></div>
+                                                        <div class="card__content">
+                                                            <div class="card__text">
+                                                                <div class="text__row">
+                                                                    <div class="text__loader"></div>
+                                                                    <div class="text__loader"></div>
+                                                                </div>
+                                                                <div class="text__row">
+                                                                    <div class="text__loader"></div>
+                                                                    <div class="text__loader"></div>
+                                                                </div>
+                                                            </div>
+                                                            <div class="card__symbol">
+                                                                <span></span>
+                                                                <span></span>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </label>
+                                            </div>
                                         </td>
                                     </tr>
                                     </tbody>
@@ -230,7 +295,7 @@
                             </div>
                         </div>
                         <div class="col-sm-12">
-                            <label for="entry_listCure">
+                            <label for="entry_listCure" class="main_label">
                                 Danh sách vắc-xin hoặc sinh phẩm được sử dụng
                             </label>
                             <input type="text" class="form-control" id="entry_listCure">
@@ -252,13 +317,77 @@
                                     <tr th:each="exposure:${exposures}">
                                         <td th:text="${exposure.name}">
                                         </td>
+<!--                                        <td>-->
+<!--                                            <input type="radio" class="form-check-input exposure_checkbox"-->
+<!--                                                   th:name="${'exposure:' + exposure.id}" th:value="${exposure.id + ',:,1'}">-->
+<!--                                        </td>-->
+<!--                                        <td>-->
+<!--                                            <input type="radio" class="form-check-input exposure_checkbox"-->
+<!--                                                   th:name="${'exposure:' + exposure.id}" th:value="${exposure.id + ',:,0'}">-->
+<!--                                        </td>-->
                                         <td>
-                                            <input type="radio" class="form-check-input exposure_checkbox"
-                                                   th:name="${'exposure:' + exposure.id}" th:value="${exposure.id + ',:,1'}">
+                                            <div class="option">
+                                                <input type="radio" class="exposure_checkbox"
+                                                       th:name="${'exposure:' + exposure.id}" th:value="${exposure.id + ',:,1'}"
+                                                       th:id="${'exposure-y:' + exposure.id}">
+                                                <label th:for="${'exposure-y:' + exposure.id}" aria-label="Dark grey">
+                                                    <span></span>
+                                                    Có
+                                                    <div class="card card--dark card--sm">
+                                                        <div class="card__chip"></div>
+                                                        <div class="card__content">
+                                                            <div class="card__text">
+                                                                <div class="text__row">
+                                                                    <div class="text__loader"></div>
+                                                                    <div class="text__loader"></div>
+                                                                </div>
+                                                                <div class="text__row">
+                                                                    <div class="text__loader"></div>
+                                                                    <div class="text__loader"></div>
+                                                                </div>
+                                                            </div>
+                                                            <div class="card__symbol">
+                                                                <span></span>
+                                                                <span></span>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </label>
+                                            </div>
                                         </td>
                                         <td>
-                                            <input type="radio" class="form-check-input exposure_checkbox"
-                                                   th:name="${'exposure:' + exposure.id}" th:value="${exposure.id + ',:,0'}">
+                                            <div class="option">
+                                                <input type="radio" class="exposure_checkbox"
+                                                       checked="checked"
+                                                       th:name="${'exposure:' + exposure.id}"
+                                                       th:value="${exposure.id + ',:,0'}"
+                                                       th:id="${'exposure-n:' + exposure.id}">
+                                                <label th:for="${'exposure-n:' + exposure.id}" aria-label="Royal blue">
+                                                    <span></span>
+
+                                                    Không
+
+                                                    <div class="card card--blue card--sm">
+                                                        <div class="card__chip"></div>
+                                                        <div class="card__content">
+                                                            <div class="card__text">
+                                                                <div class="text__row">
+                                                                    <div class="text__loader"></div>
+                                                                    <div class="text__loader"></div>
+                                                                </div>
+                                                                <div class="text__row">
+                                                                    <div class="text__loader"></div>
+                                                                    <div class="text__loader"></div>
+                                                                </div>
+                                                            </div>
+                                                            <div class="card__symbol">
+                                                                <span></span>
+                                                                <span></span>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </label>
+                                            </div>
                                         </td>
                                     </tr>
                                     </tbody>

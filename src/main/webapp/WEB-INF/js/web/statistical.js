@@ -26,16 +26,29 @@ statistical.borderColor = [
     'rgba(223,49,240,1)'
 ];
 statistical.location = $("#locationOfChart");
+statistical.chartCanvas = $("#statisticalChart");
+statistical.chartObject = statistical.chartObject || {};
 statistical.canvasValue = function () {
-    statistical.location.html("<canvas id=\"statisticalChart\" width=\"100%\" height=\"50\"></canvas>");
-    // var insideHeight = $("#statisticalChart").height() + staticPart.inside.height(),
-    //     windowHeight = $(window).height() - staticPart.header.height() - staticPart.footer.height();
-    // if (insideHeight>windowHeight)
-    //     staticPart.main.css("height", insideHeight);
-    // else
-    //     staticPart.main.css("height", windowHeight);
-    // staticPart.changeSizeOfMain();
+    // statistical.location.html("<canvas id=\"statisticalChart\" width=\"100%\" height=\"50\"></canvas>");
+    if (statistical.chartObject instanceof Chart)
+        statistical.chartObject.destroy();
 };
+
+statistical.dateRange = {
+    begin:"",
+    end:""
+}
+statistical.setDateRange = function(){
+    var dateBegin = $("#beginDate"),
+        dateEnd = $("#endDate");
+    if (dateBegin.valid() && dateEnd.valid()){
+        statistical.dateRange.begin = dateBegin.val();
+        statistical.dateRange.end = dateEnd.val();
+        return true;
+    }
+    return false;
+}
+
 statistical.setValidate = function(){
 
     $("#formStatistical").validate();
@@ -62,23 +75,23 @@ statistical.setValidate = function(){
         }
         );
 }
-
+statistical.getDateRangeText = function(){
+    return "Từ " + statistical.dateRange.begin + " Đến " + statistical.dateRange.end;
+}
+statistical.symptomText = " Triệu Chứng";
+statistical.symptomChartText = "Thống Kê Số Người Có Cùng Số Lượng Triệu Chứng ";
 statistical.getSymptom = function () {
-    var dateBegin = $("#beginDate"),
-        dateEnd = $("#endDate");
-    if (dateBegin.valid() && dateEnd.valid()){
+    if (statistical.setDateRange()){
         statistical.canvasValue();
-        var dateRange = {
-            begin:dateBegin.val(),
-            end:dateEnd.val()
-        }
         $.ajax(
             {
                 url: urlRoot + "statistical_symptom/amount_people",
                 method: 'POST',
                 dataType: 'json',
                 contentType: 'application/json',
-                data:JSON.stringify(dateRange)
+                async: false,
+                // data:JSON.stringify(dateRange)
+                data:JSON.stringify(statistical.dateRange)
             }
         ).done(
             function (data) {
@@ -87,21 +100,20 @@ statistical.getSymptom = function () {
                     border = [],
                     colorCount = 0;
                 $.each(data,function (index,value) {
-                    label.push(value.numberSymptom + " Triệu Chứng");
+                    label.push(value.numberSymptom + statistical.symptomText);
                     dataValue.push(value.amountEntry);
                     background.push(statistical.backgroundColor[colorCount]);
                     border.push(statistical.borderColor[colorCount]);
                     colorCount ++;
                 });
-                // console.log(label);
-                // console.log(dataValue);
-                var cxt = $("#statisticalChart")[0].getContext('2d');
+
+                var cxt = statistical.chartCanvas[0].getContext('2d');
                 var chartSet = {
                     type: "pie",
                     data: {
                         labels: label,
                         datasets:[{
-                            label: "# Triệu Chứng",
+                            label: "#" + statistical.symptomText,
                             data: dataValue,
                             backgroundColor: background,
                             borderColor: border,
@@ -118,11 +130,12 @@ statistical.getSymptom = function () {
                         },
                         title:{
                             display: true,
-                            text: "Thống Kê Số Người Có Cùng Số Lượng Triệu Chứng Từ " + dateRange.begin + " Đến " + dateRange.end
-                        }
+                            text: statistical.symptomChartText + statistical.getDateRangeText()
+                        },
+                        onClick: statistical.getSymptomList
                     }
                 }
-                var barChart = new Chart( cxt, chartSet);
+                statistical.chartObject = new Chart( cxt, chartSet);
                 staticPart.changeSizeOfMain();
             }
         ).fail(
@@ -133,22 +146,148 @@ statistical.getSymptom = function () {
     }
 
 }
-statistical.getByTypeSymptom = function () {
-    var dateBegin = $("#beginDate"),
-        dateEnd = $("#endDate");
-    if (dateBegin.valid() && dateEnd.valid()){
-        statistical.canvasValue();
-        var dateRange = {
-            begin:dateBegin.val(),
-            end:dateEnd.val()
+statistical.pageSize = 5;
+statistical.modalForListPeople = $("#listPerson");
+statistical.modalForListPeople_tittle = $("#listPerson_tittle");
+statistical.getSymptomList = function(event){
+    var activePoints = statistical.chartObject.getElementsAtEvent(event),
+        firstPoint = activePoints[0],
+        label = statistical.chartObject.data.labels[firstPoint._index].replace(statistical.symptomText, "");
+    // var value = statistical.chartObject.data.datasets[firstPoint._datasetIndex].data[firstPoint._index];
+    statistical.tableLocation.html(
+        "<table class='table'" +
+        "   <thead>" +
+        "       <tr>" +
+        "           <th scope='col'>Tên</th>" +
+        "           <th scope='col'>Ngày Nhập Cảnh</th>\n" +
+        "           <th scope='col'><a href='Chi Tiết'></th>\n" +
+        "       </tr>" +
+        "   </thead>" +
+        "   <tbody id='tableForListPerson_body'>" +
+        "   </tbody>" +
+        "</table>"
+    );
+    statistical.modalForListPeople_tittle.html("<h3>Danh Sách Những Người Có " + label + " Triệu Chứng</h3>");
+    statistical.modalForListPeople_tittle.append("<h4>" + statistical.getDateRangeText() +"</h4>")
+    statistical.getDataSymptomList(0, label);
+    statistical.modalForListPeople.modal("show");
+}
+statistical.tableLocation = $("#tableForListPerson");
+statistical.pagingLocation = $("#pagingForTable");
+statistical.pagingVoid = "<li><a class='page-link' tabindex='-1'>.</li>";
+statistical.getDataSymptomList = function(page,amount){
+    $.ajax(
+        {
+            url: urlRoot + "statistical_symptom/amount_people/" + page + "/" + statistical.pageSize,
+            method: 'POST',
+            dataType: 'json',
+            contentType: 'application/json',
+            async: false,
+            // data:JSON.stringify(dateRange)
+            data:JSON.stringify({
+                begin:statistical.dateRange.begin,
+                end:statistical.dateRange.end,
+                amount: "" + amount
+            })
         }
+    ).done(
+        function (data) {
+            var tableBody = $("#tableForListPerson_body");
+            tableBody.html("");
+            $.each(data.listPeople,
+                function (index, person) {
+                    tableBody.append(
+                        "<tr>" +
+                        "   <td>" + person.name + "</td>" +
+                        "   <td>" + statistical.getDate(person.date) + "</td>" +
+                        "   <td><a href='/viewDeclare/" + person.idPerson +"' class='btn btn-info'>Chi Tiết</a></td>" +
+                        "</tr>"
+                    );
+                }
+                );
+            var previousPage = data.page - 1;
+            if (previousPage >= 0){
+                statistical.pagingLocation.html(
+                    "<li>" +
+                    "   <a class='page-link' tabindex='-1' " +
+                    "       onclick='statistical.getDataSymptomList(" + previousPage + "," + amount + ");'>" +
+                    "Trang Trước</a>" +
+                    "</li>"
+                );
+            }
+            else {
+                statistical.pagingLocation.html(
+                    "<li class='disabled'>" +
+                    "   <a class='page-link' tabindex='-1' >" +
+                    "Trang Trước</a>" +
+                    "</li>");
+            }
+            var pagingStart = data.page - 3,
+                pagingEnd = data.page + 3;
+            if (pagingStart>0){
+                statistical.pagingLocation.append(statistical.pagingVoid);
+            }
+            else {
+                pagingStart = 0;
+            }
+            if (pagingEnd>data.pageAmount){
+                pagingEnd = data.pageAmount;
+            }
+            for (var i=pagingStart; i<pagingEnd; i++){
+                if (i===data.page){
+                    statistical.pagingLocation.append(
+                        "<li class='active'>" +
+                        "<a class='page-link' tabindex='-1' " +
+                        "onclick='statistical.getDataSymptomList(" + i + "," + amount + ");'>" +
+                        (i+1) + "</a>" +
+                        "</li>");
+                }
+                else {
+                    statistical.pagingLocation.append(
+                        "<li>" +
+                        "<a class='page-link' tabindex='-1' " +
+                        "onclick='statistical.getDataSymptomList(" + i + "," + amount + ");'>" +
+                        (i+1) + "</a>" +
+                        "</li>");
+                }
+
+            }
+            if (pagingEnd!==data.pageAmount){
+                statistical.pagingLocation.append(statistical.pagingVoid);
+            }
+            var nextPage = data.page + 1;
+            if (nextPage<data.pageAmount){
+                statistical.pagingLocation.append(
+                    "<li>" +
+                    "   <a class='page-link' tabindex='-1' " +
+                    "       onclick='statistical.getDataSymptomList(" + nextPage + "," + amount + ");'>" +
+                    "Trang Sau</a>" +
+                    "</li>"
+                );
+            }
+            else{
+                statistical.pagingLocation.append(
+                    "<li>" +
+                    "   <a class='page-link' tabindex='-1'>" +
+                    "Trang Sau</a>" +
+                    "</li>"
+                );
+            }
+        }
+    );
+}
+
+statistical.getByTypeSymptom = function () {
+    if (statistical.setDateRange()){
+        statistical.canvasValue();
         $.ajax(
             {
                 url: urlRoot + "statistical_symptom/symptomType",
                 method: 'POST',
                 dataType: 'json',
                 contentType: 'application/json',
-                data:JSON.stringify(dateRange)
+                async: false,
+                data:JSON.stringify(statistical.dateRange)
             }
         ).done(
             function (data) {
@@ -163,8 +302,7 @@ statistical.getByTypeSymptom = function () {
                     border.push(statistical.borderColor[colorCount]);
                     colorCount ++;
                 });
-                // console.log(label);
-                // console.log(dataValue);
+
                 var cxt = $("#statisticalChart")[0].getContext('2d');
                 var chartSet = {
                     type: "bar",
@@ -189,11 +327,12 @@ statistical.getByTypeSymptom = function () {
                         },
                         title:{
                             display: true,
-                            text: "Thống Kê Theo Loại Triệu Chứng Từ " + dateRange.begin + " Đến " + dateRange.end
-                        }
+                            text: "Thống Kê Theo Loại Triệu Chứng Từ " + statistical.getDateRangeText()
+                        },
+                        onClick: statistical.getTypeSymptomList
                     }
                 }
-                var barChart = new Chart( cxt, chartSet);
+                statistical.chartObject = new Chart( cxt, chartSet);
                 staticPart.changeSizeOfMain();
             }
         ).fail(
@@ -202,7 +341,133 @@ statistical.getByTypeSymptom = function () {
             }
         );
     }
+}
 
+statistical.symptomName = "";
+statistical.getTypeSymptomList = function(event){
+    var activePoints = statistical.chartObject.getElementsAtEvent(event),
+        firstPoint = activePoints[0];
+    statistical.symptomName = statistical.chartObject.data.labels[firstPoint._index];
+
+    statistical.tableLocation.html(
+        "<table class='table'" +
+        "   <thead>" +
+        "       <tr>" +
+        "           <th scope='col'>Tên</th>" +
+        "           <th scope='col'>Ngày Nhập Cảnh</th>\n" +
+        "           <th scope='col'><a href='Chi Tiết'></th>\n" +
+        "       </tr>" +
+        "   </thead>" +
+        "   <tbody id='tableForListPerson_body'>" +
+        "   </tbody>" +
+        "</table>"
+    );
+    statistical.modalForListPeople_tittle.html("<h3>Danh Sách Những Người Bị " + statistical.symptomName + "</h3>");
+    statistical.modalForListPeople_tittle.append("<h4>" + statistical.getDateRangeText() +"</h4>")
+    statistical.getDataTypeSymptomList(0);
+    statistical.modalForListPeople.modal("show");
+}
+
+statistical.getDataTypeSymptomList = function(page){
+    $.ajax(
+        {
+            url: urlRoot + "statistical_symptom/symptomType/" + page + "/" + statistical.pageSize,
+            method: 'POST',
+            dataType: 'json',
+            contentType: 'application/json',
+            async: false,
+            // data:JSON.stringify(dateRange)
+            data:JSON.stringify({
+                begin:statistical.dateRange.begin,
+                end:statistical.dateRange.end,
+                symptom: statistical.symptomName
+            })
+        }
+    ).done(
+        function (data) {
+            var tableBody = $("#tableForListPerson_body");
+            tableBody.html("");
+            $.each(data.content,
+                function (index, person) {
+                    tableBody.append(
+                        "<tr>" +
+                        "   <td>" + person.name + "</td>" +
+                        "   <td>" + statistical.getDate(person.date) + "</td>" +
+                        "   <td><a href='/viewDeclare/" + person.idPerson +"' class='btn btn-info'>Chi Tiết</a></td>" +
+                        "</tr>"
+                    );
+                }
+            );
+            var previousPage = data.pageable.pageNumber - 1;
+            if (previousPage >= 0){
+                statistical.pagingLocation.html(
+                    "<li>" +
+                    "   <a class='page-link' tabindex='-1' " +
+                    "       onclick='statistical.getDataTypeSymptomList(" + previousPage + ");'>" +
+                    "Trang Trước</a>" +
+                    "</li>"
+                );
+            }
+            else {
+                statistical.pagingLocation.html(
+                    "<li class='disabled'>" +
+                    "   <a class='page-link' tabindex='-1' >" +
+                    "Trang Trước</a>" +
+                    "</li>");
+            }
+            var pagingStart = data.pageable.pageNumber - 3,
+                pagingEnd = data.pageable.pageNumber + 3;
+            if (pagingStart>0){
+                statistical.pagingLocation.append(statistical.pagingVoid);
+            }
+            else {
+                pagingStart = 0;
+            }
+            if (pagingEnd>data.totalPages){
+                pagingEnd = data.totalPages;
+            }
+            for (var i=pagingStart; i<pagingEnd; i++){
+                if (i===data.pageable.pageNumber){
+                    statistical.pagingLocation.append(
+                        "<li class='active'>" +
+                        "<a class='page-link' tabindex='-1' " +
+                        "onclick='statistical.getDataTypeSymptomList(" + i + ");'>" +
+                        (i+1) + "</a>" +
+                        "</li>");
+                }
+                else {
+                    statistical.pagingLocation.append(
+                        "<li>" +
+                        "<a class='page-link' tabindex='-1' " +
+                        "onclick='statistical.getDataTypeSymptomList(" + i + ");'>" +
+                        (i+1) + "</a>" +
+                        "</li>");
+                }
+
+            }
+            if (pagingEnd!==data.totalPages){
+                statistical.pagingLocation.append(statistical.pagingVoid);
+            }
+            var nextPage = data.pageable.pageNumber + 1;
+            if (nextPage<data.totalPages){
+                statistical.pagingLocation.append(
+                    "<li>" +
+                    "   <a class='page-link' tabindex='-1' " +
+                    "       onclick='statistical.getDataTypeSymptomList(" + nextPage + ");'>" +
+                    "Trang Sau</a>" +
+                    "</li>"
+                );
+            }
+            else{
+                statistical.pagingLocation.append(
+                    "<li>" +
+                    "   <a class='page-link' tabindex='-1'>" +
+                    "Trang Sau</a>" +
+                    "</li>"
+                );
+            }
+        }
+    );
 }
 
 statistical.getExposure = function () {
@@ -220,6 +485,7 @@ statistical.getExposure = function () {
                 method: 'POST',
                 dataType: 'json',
                 contentType: 'application/json',
+                async: false,
                 data:JSON.stringify(dateRange)
             }
         ).done(
@@ -235,8 +501,7 @@ statistical.getExposure = function () {
                     border.push(statistical.borderColor[colorCount]);
                     colorCount ++;
                 });
-                // console.log(label);
-                // console.log(dataValue);
+
                 var cxt = $("#statisticalChart")[0].getContext('2d');
                 var chartSet = {
                     type: "pie",
@@ -264,8 +529,9 @@ statistical.getExposure = function () {
                         }
                     }
                 }
-                var barChart = new Chart( cxt, chartSet);
+                statistical.chartObject = new Chart( cxt, chartSet);
                 staticPart.changeSizeOfMain();
+                $("#statisticalChart").onclick();
             }
         ).fail(
             function () {
@@ -290,6 +556,7 @@ statistical.getByTypeExposure = function () {
                 method: 'POST',
                 dataType: 'json',
                 contentType: 'application/json',
+                async: false,
                 data:JSON.stringify(dateRange)
             }
         ).done(
@@ -305,8 +572,7 @@ statistical.getByTypeExposure = function () {
                     border.push(statistical.borderColor[colorCount]);
                     colorCount ++;
                 });
-                // console.log(label);
-                // console.log(dataValue);
+
                 var cxt = $("#statisticalChart")[0].getContext('2d');
                 var chartSet = {
                     type: "bar",
@@ -335,7 +601,7 @@ statistical.getByTypeExposure = function () {
                         }
                     }
                 }
-                var barChart = new Chart( cxt, chartSet);
+                statistical.chartObject = new Chart( cxt, chartSet);
                 staticPart.changeSizeOfMain();
             }
         ).fail(
@@ -361,6 +627,7 @@ statistical.getEntry = function () {
                 method: 'POST',
                 dataType: 'json',
                 contentType: 'application/json',
+                async: false,
                 data:JSON.stringify(dateRange)
             }
         ).done(
@@ -377,10 +644,12 @@ statistical.getEntry = function () {
                         labels: label,
                         datasets:[{
                             label: "# Người ",
-                            fillColor: 'rgba(37, 147, 127, 0.5)',
+                            fillColor: 'rgba(86,229,229,0.43)',
                             strokeColor: 'rgba(37, 147, 127, 0.6)',
-                            pointColor: 'rgba(37, 147, 127, 1)',
-                            backgroundColor: 'rgba(37, 147, 127, 0.8)',
+                            pointBackgroundColor: 'rgba(227,15,15,0.68)',
+                            pointBorderColor: 'rgba(227,57,15,0.94)',
+                            backgroundColor: 'rgba(87,208,187,0.4)',
+                            borderColor: 'rgba(37, 147, 127, 0.8)',
                             borderWidth: 1,
                             data: dataValue
                         }]
@@ -400,8 +669,9 @@ statistical.getEntry = function () {
                         }
                     }
                 }
-                var barChart = new Chart( cxt, chartSet);
+                statistical.chartObject = new Chart( cxt, chartSet);
                 staticPart.changeSizeOfMain();
+                $()
             }
         ).fail(
             function () {
@@ -415,5 +685,6 @@ statistical.getDate = function(dateNumber){
     return day.getDate() + "/" + (day.getMonth() + 1) + "/" + day.getFullYear();
 }
 statistical.failAction = function () {
-    $("#locationOfChart").html("<p>Không Có Thống Kê</p>")
+    // $("#locationOfChart").html("<p>Không Có Thống Kê</p>")
+    $("#messengerErrorModal").modal("show");
 }

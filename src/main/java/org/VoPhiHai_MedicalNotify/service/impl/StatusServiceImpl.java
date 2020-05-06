@@ -5,11 +5,15 @@ import org.VoPhiHai_MedicalNotify.model.Entry;
 import org.VoPhiHai_MedicalNotify.model.Status;
 import org.VoPhiHai_MedicalNotify.model.Symptom;
 import org.VoPhiHai_MedicalNotify.model.support.Statistical;
+import org.VoPhiHai_MedicalNotify.model.support.Statistical_Person;
 import org.VoPhiHai_MedicalNotify.repository.StatusRepository;
 import org.VoPhiHai_MedicalNotify.service.EntryService;
 import org.VoPhiHai_MedicalNotify.service.StatusService;
 import org.VoPhiHai_MedicalNotify.service.SymptomService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -141,6 +145,80 @@ public class StatusServiceImpl implements StatusService {
             date = (String) dateEntry.get("end");
             Date end = dateFormat.parse(date);
             return this.statisticalByTypeSymptom(begin,end);
+        } catch (ParseException e) {
+            e.printStackTrace();
+            System.out.println("Lỗi Chuyển Đổi Ngày :");
+        }
+        return null;
+    }
+
+    @Override
+    public JsonObject getListByAmountSymptom(Date begin, Date end, long amount, int size, int page) {
+        if (page<0 || size<=0){
+            return null;
+        }
+        List<Statistical_Person> listPeople =
+                statusRepository.getListPersonByAmountSymptom(begin, end);
+        if (listPeople.size()>0){
+            List<Statistical_Person> listResult = new ArrayList<>();
+            for(Statistical_Person person: listPeople){
+                if (person.getValue()==amount)
+                    listResult.add(person);
+            }
+            int pageAmount = (int) Math.ceil((double)listResult.size()/size);
+            if (page + 1 > pageAmount)
+                return null;
+            int beginLocation = page * size;
+            int endLocation = beginLocation + size;
+            if (endLocation>listResult.size())
+                endLocation = listResult.size();
+            JsonObject jsonResult = new JsonObject();
+            jsonResult.put("listPeople", listResult.subList(beginLocation,endLocation));
+            jsonResult.put("pageAmount", pageAmount);
+            jsonResult.put("page", page);
+            jsonResult.put("size", size);
+            return jsonResult;
+        }
+        return null;
+    }
+
+    @Override
+    public JsonObject getListByAmountSymptom(JsonObject data, int size, int page) {
+        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+        try {
+            return this.getListByAmountSymptom(
+                    dateFormat.parse((String) data.get("begin")),
+                    dateFormat.parse((String) data.get("end")),
+                    Long.parseLong((String) data.get("amount")),
+                    size,
+                    page
+            );
+        } catch (ParseException e) {
+            e.printStackTrace();
+            System.out.println("Lỗi Chuyển Đổi Ngày :");
+        }
+        return null;
+    }
+
+    @Override
+    public Page<Statistical_Person> getListBySymptomType(Date begin, Date end, Symptom symptom, Pageable pageable) {
+        Page<Statistical_Person> listPeople = statusRepository.getListPersonBySymptomType(begin,end,symptom,pageable);
+        if (listPeople.getSize()>0)
+            return listPeople;
+        return null;
+    }
+
+    @Override
+    public Page<Statistical_Person> getListBySymptomType(JsonObject data, int size, int page) {
+        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+        try {
+            Symptom symptom = symptomService.findByName((String) data.get("symptom"));
+            return this.getListBySymptomType(
+                    dateFormat.parse((String) data.get("begin")),
+                    dateFormat.parse((String) data.get("end")),
+                    symptom,
+                    PageRequest.of(page,size)
+            );
         } catch (ParseException e) {
             e.printStackTrace();
             System.out.println("Lỗi Chuyển Đổi Ngày :");
