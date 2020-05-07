@@ -54,4 +54,5 @@ public interface HistoryOfExposureRepository extends CrudRepository<HistoryOfExp
                                                         @Param("endDate") Date end,
                                                         @Param("exposure") Exposure exposure,
                                                         Pageable pageable);
+    List<HistoryOfExposure> findByEntry(Entry entry);
 }

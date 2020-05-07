@@ -1,5 +1,6 @@
 package org.VoPhiHai_MedicalNotify.repository;
 
+import org.VoPhiHai_MedicalNotify.model.Entry;
 import org.VoPhiHai_MedicalNotify.model.Status;
 import org.VoPhiHai_MedicalNotify.model.Symptom;
 import org.VoPhiHai_MedicalNotify.model.support.Statistical;
@@ -48,4 +49,6 @@ public interface StatusRepository extends CrudRepository<Status, Long> {
                                                         @Param("endDate") Date end,
                                                         @Param("symptom") Symptom symptom,
                                                         Pageable pageable);
+
+    List<Status> findByEntry(Entry entry);
 }

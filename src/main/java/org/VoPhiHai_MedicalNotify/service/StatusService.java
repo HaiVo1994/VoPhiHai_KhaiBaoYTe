@@ -31,4 +31,6 @@ public interface StatusService {
     JsonObject getListByAmountSymptom(JsonObject data, int size, int page);
     Page<Statistical_Person> getListBySymptomType(Date begin, Date end, Symptom symptom, Pageable pageable);
     Page<Statistical_Person> getListBySymptomType(JsonObject data, int size, int page);
+
+    List<Status> findByEntry(Entry entry);
 }

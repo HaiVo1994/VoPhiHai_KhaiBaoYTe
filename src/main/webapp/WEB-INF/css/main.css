@@ -24,6 +24,11 @@ footer{
     color: floralwhite;
     z-index: 1000;
 }
+#footer div div p.tittle{
+    font-size: x-large;
+    color: antiquewhite;
+    font-weight: bold;
+}
 #main{
     position: absolute;
     background-color: whitesmoke;
@@ -69,7 +74,7 @@ footer{
     margin-right: 0;
 }
 
-h1,h2,h3,h4,h5, button{
+h1,h2,h3,h4,h5, button, .tittle{
     text-align: center;
     margin-right: auto;
     margin-left: auto;

@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Xem Lại Tờ Khai</title>
+    <th:block th:replace="layout::cssAll"></th:block>
+    <style>
+        p{
+            font-size: large;
+            font-weight: bold;
+        }
+        p span{
+            font-size: medium;
+            font-weight: normal;
+        }
+        .trueColor{
+            background-color: rgba(13,46,101,0.9);
+            color: wheat;
+        }
+        .falseColor{
+            background-color: rgba(255,21,28,0.9);
+            color: wheat;
+        }
+    </style>
+</head>
+<body>
+    <header th:replace="layout::topBar"></header>
+    <main role="main" class="container main-contain" id="main">
+        <div id="inside" class="container-fluid">
+            <div class="row text-center">
+                <h1>Tờ Khai Của <span th:text="${entry.person.name}"></span></h1>
+            </div>
+            <div class="container-fluid">
+                <div class="row">
+                    <div class="col-12">
+                        <p> Cửa Khẩu: <span th:text="${entry.gate.name}"></span> </p>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-12 col-md-6 col-lg-4">
+                        <p>Họ Tên: <span th:text="${entry.person.name}"></span></p>
+                    </div>
+                    <div class="col-6 col-md-3 col-lg-4">
+                        <p>Năm Sinh: <span th:text="${entry.person.birthYear}"></span></p>
+                    </div>
+                    <div class="col-6 col-md-3 col-lg-4">
+                        <p>Giới Tính :
+                            <th:block th:switch="${entry.person.gender}">
+                                <span th:case="0">Nam</span>
+                                <span th:case="1">Nữ</span>
+                                <span th:case="2">Khác</span>
+                            </th:block>
+                        </p>
+                    </div>
+                    <div class="col-12">
+                        <p>Quốc Tịch: <span th:text="${entry.person.nationality.name}"></span></p>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-12">
+                        <p>Phương Tiện:
+                            <span th:text="${entry.transport.transportType.name}"></span>
+                            <th:block th:if="${entry.transport.transportationNo !=null}">
+                                ,<span>Số hiệu: </span><span th:text="${entry.transport.transportationNo}"></span>
+                            </th:block>
+                            <th:block th:if="${entry.seatNo !=null}">
+                                ,<span>Số ghế: </span><span th:text="${entry.seatNo}"></span>
+                            </th:block>
+                        </p>
+                    </div>
+                    <div class="col-12" th:if="${entry.transport.note != null}">
+                        <p>Ghi chú (Cho phương tiện di chuyển)</p>
+                        <p th:text="${entry.transport.note}"></p>
+                    </div>
+                    <div class="col-12 col-md-6">
+                        <p>Ngày khởi hành: <span th:text="${entry.departureDate}"></span></p>
+                    </div>
+                    <div class="col-12 col-md-6">
+                        <p>Ngày nhập cảnh: <span th:text="${entry.immigrationDate}"></span></p>
+                    </div>
+                    <div class="col-12 col-md-6">
+                        <p>Địa điểm khởi hành:
+                            <span th:text="${entry.provinceDeparture.national.name}"></span>
+                            -
+                            <span th:text="${entry.provinceDeparture.name}"></span>
+                        </p>
+                    </div>
+                    <div class="col-12 col-md-6">
+                        <p>Địa điểm nơi đến:
+                            <span th:text="${entry.provinceDestination.national.name}"></span>
+                            -
+                            <span th:text="${entry.provinceDestination.name}"></span>
+                        </p>
+                    </div>
+                    <div class="col-12">
+                        <p>Những nơi đã đi qua gần đây: <span th:text="${entry.placeTravel}"></span></p>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-12">
+                        <p>Phương Thức Liên Lạc</p>
+                        <p>Địa chỉ:
+                            <span th:text="${contact.location.district.province.name}"></span>
+                            ,
+                            <span th:text="${contact.location.district.name}"></span>
+                            ,
+                            <span th:text="${contact.location.name}"></span>
+                            ,
+                            <span th:text="${contact.address}"></span>
+                        </p>
+                    </div>
+                    <div class="col-12 col-lg-6">
+                        <p>
+                            Điện thoại: <span th:text="${contact.phone}"></span>
+                        </p>
+                    </div>
+                    <div class="col-12 col-lg-6" th:if="${contact.email!=null}">
+                        <p>
+                            Email: <span th:text="${contact.email}"></span>
+                        </p>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-12">
+                        <table class="table">
+                            <thead>
+                                <tr>
+                                    <th style="width: 90%">Triệu chứng</th>
+                                    <th style="width: 10%"></th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr th:each="status:${statusList}">
+                                    <td th:text="${status.symptom.name}"></td>
+                                    <th:block th:if="${status.haveSymptom}">
+                                        <td class="trueColor">Có</td>
+                                    </th:block>
+                                    <th:block th:unless="${status.haveSymptom}">
+                                        <td class="falseColor">Không</td>
+                                    </th:block>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div class="col-12" th:if="${entry.listCure!=null}">
+                        <p>Danh sách vắc-xin hoặc sinh phẩm được sử dụng</p>
+                        <p th:text="${entry.listCure}"></p>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <p>Lịch sử phơi nhiễm trong vòng 14 ngày qua</p>
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th style="width: 90%">Nguồn</th>
+                            <th style="width: 10%"></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                    <tr th:each="history:${historyExposure}">
+                        <td th:text="${history.exposure.name}"></td>
+                        <th:block th:if="${history.hasExposure}">
+                            <td class="trueColor">Có</td>
+                        </th:block>
+                        <th:block th:unless="${history.hasExposure}">
+                            <td class="falseColor">Không</td>
+                        </th:block>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </main>
+    <footer th:replace="layout::bottomBar"></footer>
+    <th:block th:replace="layout::jsAll"></th:block>
+</body>
+</html>

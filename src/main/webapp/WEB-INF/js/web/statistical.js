@@ -38,6 +38,7 @@ statistical.dateRange = {
     begin:"",
     end:""
 }
+
 statistical.setDateRange = function(){
     var dateBegin = $("#beginDate"),
         dateEnd = $("#endDate");
@@ -48,7 +49,14 @@ statistical.setDateRange = function(){
     }
     return false;
 }
-
+statistical.getDate = function(dateNumber){
+    var day = new Date(dateNumber);
+    return day.getDate() + "/" + (day.getMonth() + 1) + "/" + day.getFullYear();
+}
+statistical.failAction = function () {
+    // $("#locationOfChart").html("<p>Không Có Thống Kê</p>")
+    $("#messengerErrorModal").modal("show");
+}
 statistical.setValidate = function(){
 
     $("#formStatistical").validate();
@@ -789,15 +797,10 @@ statistical.getDataTypeExposureList = function(page){
     );
 }
 
+statistical.entryChartText = "Thống Kê Số Người Đã Nhập Cảnh Từ ";
 statistical.getEntry = function () {
-    var dateBegin = $("#beginDate"),
-        dateEnd = $("#endDate");
-    if (dateBegin.valid() && dateEnd.valid()){
+    if (statistical.setDateRange()){
         statistical.canvasValue();
-        var dateRange = {
-            begin:dateBegin.val(),
-            end:dateEnd.val()
-        }
         $.ajax(
             {
                 url: urlRoot + "statistical_entry/amount_people",
@@ -805,7 +808,7 @@ statistical.getEntry = function () {
                 dataType: 'json',
                 contentType: 'application/json',
                 async: false,
-                data:JSON.stringify(dateRange)
+                data:JSON.stringify(statistical.dateRange)
             }
         ).done(
             function (data) {
@@ -842,8 +845,9 @@ statistical.getEntry = function () {
                         },
                         title:{
                             display: true,
-                            text: "Thống Kê Số Người Đã Nhập Cảnh Từ " + dateRange.begin + " Đến " + dateRange.end
-                        }
+                            text: statistical.entryChartText + statistical.getDateRangeText()
+                        },
+                        onClick: statistical.getEntryList
                     }
                 }
                 statistical.chartObject = new Chart( cxt, chartSet);
@@ -857,11 +861,99 @@ statistical.getEntry = function () {
         );
     }
 }
-statistical.getDate = function(dateNumber){
-    var day = new Date(dateNumber);
-    return day.getDate() + "/" + (day.getMonth() + 1) + "/" + day.getFullYear();
+statistical.getEntryList = function(event){
+    statistical.tableLocation.html(statistical.tableHtml);
+    statistical.modalForListPeople_tittle.html("<h3>Danh Sách Những Người Nhập Cảnh</h3>");
+    statistical.modalForListPeople_tittle.append("<h4>" + statistical.getDateRangeText() +"</h4>")
+    statistical.getDataEntryList(0);
+    statistical.modalForListPeople.modal("show");
 }
-statistical.failAction = function () {
-    // $("#locationOfChart").html("<p>Không Có Thống Kê</p>")
-    $("#messengerErrorModal").modal("show");
+statistical.getDataEntryList = function(page){
+    $.ajax(
+        {
+            url: urlRoot + "statistical_entry/listPeople/" + page + "/" + statistical.pageSize,
+            method: 'POST',
+            dataType: 'json',
+            contentType: 'application/json',
+            async: false,
+            // data:JSON.stringify(dateRange)
+            data:JSON.stringify({
+                begin:statistical.dateRange.begin,
+                end:statistical.dateRange.end
+            })
+        }
+    ).done(
+        function (data) {
+            statistical.drawTable(data.content);
+            var previousPage = data.pageable.pageNumber - 1;
+            if (previousPage >= 0){
+                statistical.pagingLocation.html(
+                    "<li>" +
+                    "   <a class='page-link' tabindex='-1' " +
+                    "       onclick='statistical.getDataEntryList(" + previousPage + ");'>" +
+                    "Trang Trước</a>" +
+                    "</li>"
+                );
+            }
+            else {
+                statistical.pagingLocation.html(
+                    "<li class='disabled'>" +
+                    "   <a class='page-link' tabindex='-1' >" +
+                    "Trang Trước</a>" +
+                    "</li>");
+            }
+            var pagingStart = data.pageable.pageNumber - 3,
+                pagingEnd = data.pageable.pageNumber + 3;
+            if (pagingStart>0){
+                statistical.pagingLocation.append(statistical.pagingVoid);
+            }
+            else {
+                pagingStart = 0;
+            }
+            if (pagingEnd>data.totalPages){
+                pagingEnd = data.totalPages;
+            }
+            for (var i=pagingStart; i<pagingEnd; i++){
+                if (i===data.pageable.pageNumber){
+                    statistical.pagingLocation.append(
+                        "<li class='active'>" +
+                        "<a class='page-link' tabindex='-1' " +
+                        "onclick='statistical.getDataEntryList(" + i + ");'>" +
+                        (i+1) + "</a>" +
+                        "</li>");
+                }
+                else {
+                    statistical.pagingLocation.append(
+                        "<li>" +
+                        "<a class='page-link' tabindex='-1' " +
+                        "onclick='statistical.getDataEntryList(" + i + ");'>" +
+                        (i+1) + "</a>" +
+                        "</li>");
+                }
+
+            }
+            if (pagingEnd!==data.totalPages){
+                statistical.pagingLocation.append(statistical.pagingVoid);
+            }
+            var nextPage = data.pageable.pageNumber + 1;
+            if (nextPage<data.totalPages){
+                statistical.pagingLocation.append(
+                    "<li>" +
+                    "   <a class='page-link' tabindex='-1' " +
+                    "       onclick='statistical.getDataEntryList(" + nextPage + ");'>" +
+                    "Trang Sau</a>" +
+                    "</li>"
+                );
+            }
+            else{
+                statistical.pagingLocation.append(
+                    "<li>" +
+                    "   <a class='page-link' tabindex='-1'>" +
+                    "Trang Sau</a>" +
+                    "</li>"
+                );
+            }
+        }
+    );
 }
+

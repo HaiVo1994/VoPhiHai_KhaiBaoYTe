@@ -4,9 +4,13 @@ import com.github.cliftonlabs.json_simple.JsonObject;
 import org.VoPhiHai_MedicalNotify.model.*;
 import org.VoPhiHai_MedicalNotify.model.support.Statistical;
 import org.VoPhiHai_MedicalNotify.model.support.Statistical_Entry;
+import org.VoPhiHai_MedicalNotify.model.support.Statistical_Person;
 import org.VoPhiHai_MedicalNotify.repository.EntryRepository;
 import org.VoPhiHai_MedicalNotify.service.*;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -139,11 +143,9 @@ public class EntryServiceImpl implements EntryService {
     public List<Statistical_Entry> statisticalEntry(JsonObject timeFind) {
         SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
         try {
-            String date = (String) timeFind.get("begin");
-            Date begin = dateFormat.parse(date);
-            date = (String) timeFind.get("end");
-            Date end = dateFormat.parse(date);
-            return this.statisticalEntry(begin,end);
+            return this.statisticalEntry(
+                    dateFormat.parse((String) timeFind.get("begin")),
+                    dateFormat.parse((String) timeFind.get("end")));
         } catch (ParseException e) {
             e.printStackTrace();
             System.out.println("Lỗi Chuyển Đổi Ngày :");
@@ -152,7 +154,25 @@ public class EntryServiceImpl implements EntryService {
     }
 
     @Override
-    public List<Entry> getByImmigrationDate(Date begin, Date end) {
-        return entryRepository.getEntriesByImmigrationDate(begin,end);
+    public Page<Statistical_Person> getByImmigrationDate(Date begin, Date end, Pageable pageable) {
+        Page<Statistical_Person> listPeople = entryRepository.getEntriesByImmigrationDate(begin,end,pageable);
+        if (listPeople.getSize()>0)
+            return listPeople;
+        return null;
+    }
+
+    @Override
+    public Page<Statistical_Person> getByImmigrationDate(JsonObject timeFind, int page, int size) {
+        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+        try {
+            return this.getByImmigrationDate(
+                    dateFormat.parse((String) timeFind.get("begin")),
+                    dateFormat.parse((String) timeFind.get("end")),
+                    PageRequest.of(page, size));
+        } catch (ParseException e) {
+            e.printStackTrace();
+            System.out.println("Lỗi Chuyển Đổi Ngày :");
+        }
+        return null;
     }
 }

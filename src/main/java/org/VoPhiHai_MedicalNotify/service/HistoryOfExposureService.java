@@ -31,4 +31,6 @@ public interface HistoryOfExposureService {
     JsonObject getListByAmountExposure(JsonObject data, int size, int page);
     Page<Statistical_Person> getListByExposureType(Date begin, Date end, Exposure exposure, Pageable pageable);
     Page<Statistical_Person> getListByExposureType(JsonObject data, int size, int page);
+
+    List<HistoryOfExposure> findByEntry(Entry entry);
 }

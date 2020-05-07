@@ -225,4 +225,9 @@ public class HistoryOfExposureServiceImpl implements HistoryOfExposureService {
         }
         return null;
     }
+
+    @Override
+    public List<HistoryOfExposure> findByEntry(Entry entry) {
+        return historyOfExposureRepository.findByEntry(entry);
+    }
 }

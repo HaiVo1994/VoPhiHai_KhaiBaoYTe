@@ -225,4 +225,9 @@ public class StatusServiceImpl implements StatusService {
         }
         return null;
     }
+
+    @Override
+    public List<Status> findByEntry(Entry entry) {
+        return statusRepository.findByEntry(entry);
+    }
 }
