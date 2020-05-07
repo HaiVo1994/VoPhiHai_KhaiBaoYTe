@@ -222,7 +222,7 @@ statistical.getDataSymptomList = function(page,amount){
             if (previousPage >= 0){
                 statistical.pagingLocation.html(
                     "<li>" +
-                    "   <a class='page-link' tabindex='-1' " +
+                    "   <a class='page-item page-link' tabindex='-1' " +
                     "       onclick='statistical.getDataSymptomList(" + previousPage + "," + amount + ");'>" +
                     "Trang Trước</a>" +
                     "</li>"
@@ -230,7 +230,7 @@ statistical.getDataSymptomList = function(page,amount){
             }
             else {
                 statistical.pagingLocation.html(
-                    "<li class='disabled'>" +
+                    "<li class='page-item disabled'>" +
                     "   <a class='page-link' tabindex='-1' >" +
                     "Trang Trước</a>" +
                     "</li>");
@@ -247,9 +247,9 @@ statistical.getDataSymptomList = function(page,amount){
                 pagingEnd = data.pageAmount;
             }
             for (var i=pagingStart; i<pagingEnd; i++){
-                if (i===data.page){
+                if (i==data.page){
                     statistical.pagingLocation.append(
-                        "<li class='active'>" +
+                        "<li class='page-item active'>" +
                         "<a class='page-link' tabindex='-1' " +
                         "onclick='statistical.getDataSymptomList(" + i + "," + amount + ");'>" +
                         (i+1) + "</a>" +
@@ -257,7 +257,7 @@ statistical.getDataSymptomList = function(page,amount){
                 }
                 else {
                     statistical.pagingLocation.append(
-                        "<li>" +
+                        "<li class='page-item'>" +
                         "<a class='page-link' tabindex='-1' " +
                         "onclick='statistical.getDataSymptomList(" + i + "," + amount + ");'>" +
                         (i+1) + "</a>" +
@@ -271,7 +271,7 @@ statistical.getDataSymptomList = function(page,amount){
             var nextPage = data.page + 1;
             if (nextPage<data.pageAmount){
                 statistical.pagingLocation.append(
-                    "<li>" +
+                    "<li class='page-item'>" +
                     "   <a class='page-link' tabindex='-1' " +
                     "       onclick='statistical.getDataSymptomList(" + nextPage + "," + amount + ");'>" +
                     "Trang Sau</a>" +
@@ -280,7 +280,7 @@ statistical.getDataSymptomList = function(page,amount){
             }
             else{
                 statistical.pagingLocation.append(
-                    "<li>" +
+                    "<li class='page-item disabled'>" +
                     "   <a class='page-link' tabindex='-1'>" +
                     "Trang Sau</a>" +
                     "</li>"
@@ -389,7 +389,7 @@ statistical.getDataTypeSymptomList = function(page){
             var previousPage = data.pageable.pageNumber - 1;
             if (previousPage >= 0){
                 statistical.pagingLocation.html(
-                    "<li>" +
+                    "<li class='page-item'>" +
                     "   <a class='page-link' tabindex='-1' " +
                     "       onclick='statistical.getDataTypeSymptomList(" + previousPage + ");'>" +
                     "Trang Trước</a>" +
@@ -398,7 +398,7 @@ statistical.getDataTypeSymptomList = function(page){
             }
             else {
                 statistical.pagingLocation.html(
-                    "<li class='disabled'>" +
+                    "<li class='page-item disabled'>" +
                     "   <a class='page-link' tabindex='-1' >" +
                     "Trang Trước</a>" +
                     "</li>");
@@ -415,9 +415,9 @@ statistical.getDataTypeSymptomList = function(page){
                 pagingEnd = data.totalPages;
             }
             for (var i=pagingStart; i<pagingEnd; i++){
-                if (i===data.pageable.pageNumber){
+                if (i==data.pageable.pageNumber){
                     statistical.pagingLocation.append(
-                        "<li class='active'>" +
+                        "<li class='page-item active'>" +
                         "<a class='page-link' tabindex='-1' " +
                         "onclick='statistical.getDataTypeSymptomList(" + i + ");'>" +
                         (i+1) + "</a>" +
@@ -425,7 +425,7 @@ statistical.getDataTypeSymptomList = function(page){
                 }
                 else {
                     statistical.pagingLocation.append(
-                        "<li>" +
+                        "<li class='page-item'>" +
                         "<a class='page-link' tabindex='-1' " +
                         "onclick='statistical.getDataTypeSymptomList(" + i + ");'>" +
                         (i+1) + "</a>" +
@@ -439,7 +439,7 @@ statistical.getDataTypeSymptomList = function(page){
             var nextPage = data.pageable.pageNumber + 1;
             if (nextPage<data.totalPages){
                 statistical.pagingLocation.append(
-                    "<li>" +
+                    "<li class='page-item'>" +
                     "   <a class='page-link' tabindex='-1' " +
                     "       onclick='statistical.getDataTypeSymptomList(" + nextPage + ");'>" +
                     "Trang Sau</a>" +
@@ -448,7 +448,7 @@ statistical.getDataTypeSymptomList = function(page){
             }
             else{
                 statistical.pagingLocation.append(
-                    "<li>" +
+                    "<li class='page-item disabled'>" +
                     "   <a class='page-link' tabindex='-1'>" +
                     "Trang Sau</a>" +
                     "</li>"
@@ -559,7 +559,7 @@ statistical.getDataExposureList = function(page, amount){
             var previousPage = data.page - 1;
             if (previousPage >= 0){
                 statistical.pagingLocation.html(
-                    "<li>" +
+                    "<li class='page-item'>" +
                     "   <a class='page-link' tabindex='-1' " +
                     "       onclick='statistical.getDataExposureList(" + previousPage + ", " + amount + ");'>" +
                     "Trang Trước</a>" +
@@ -568,7 +568,7 @@ statistical.getDataExposureList = function(page, amount){
             }
             else {
                 statistical.pagingLocation.html(
-                    "<li class='disabled'>" +
+                    "<li class='page-item disabled'>" +
                     "   <a class='page-link' tabindex='-1' >" +
                     "Trang Trước</a>" +
                     "</li>");
@@ -585,9 +585,9 @@ statistical.getDataExposureList = function(page, amount){
                 pagingEnd = data.pageAmount;
             }
             for (var i=pagingStart; i<pagingEnd; i++){
-                if (i===data.page){
+                if (i==data.page){
                     statistical.pagingLocation.append(
-                        "<li class='active'>" +
+                        "<li class='page-item active'>" +
                         "<a class='page-link' tabindex='-1' " +
                         "onclick='statistical.getDataExposureList(" + i + ", " + amount + ");'>" +
                         (i+1) + "</a>" +
@@ -595,7 +595,7 @@ statistical.getDataExposureList = function(page, amount){
                 }
                 else {
                     statistical.pagingLocation.append(
-                        "<li>" +
+                        "<li class='page-item'>" +
                         "<a class='page-link' tabindex='-1' " +
                         "onclick='statistical.getDataExposureList(" + i + ", " + amount + ");'>" +
                         (i+1) + "</a>" +
@@ -609,7 +609,7 @@ statistical.getDataExposureList = function(page, amount){
             var nextPage = data.page + 1;
             if (nextPage<data.pageAmount){
                 statistical.pagingLocation.append(
-                    "<li>" +
+                    "<li class='page-item'>" +
                     "   <a class='page-link' tabindex='-1' " +
                     "       onclick='statistical.getDataExposureList(" + nextPage + ", " + amount + ");'>" +
                     "Trang Sau</a>" +
@@ -618,7 +618,7 @@ statistical.getDataExposureList = function(page, amount){
             }
             else{
                 statistical.pagingLocation.append(
-                    "<li>" +
+                    "<li class='page-item disabled'>" +
                     "   <a class='page-link' tabindex='-1'>" +
                     "Trang Sau</a>" +
                     "</li>"
@@ -728,7 +728,7 @@ statistical.getDataTypeExposureList = function(page){
             var previousPage = data.pageable.pageNumber - 1;
             if (previousPage >= 0){
                 statistical.pagingLocation.html(
-                    "<li>" +
+                    "<li class='page-item'>" +
                     "   <a class='page-link' tabindex='-1' " +
                     "       onclick='statistical.getDataTypeExposureList(" + previousPage + ");'>" +
                     "Trang Trước</a>" +
@@ -737,7 +737,7 @@ statistical.getDataTypeExposureList = function(page){
             }
             else {
                 statistical.pagingLocation.html(
-                    "<li class='disabled'>" +
+                    "<li class='page-item disabled'>" +
                     "   <a class='page-link' tabindex='-1' >" +
                     "Trang Trước</a>" +
                     "</li>");
@@ -754,9 +754,9 @@ statistical.getDataTypeExposureList = function(page){
                 pagingEnd = data.totalPages;
             }
             for (var i=pagingStart; i<pagingEnd; i++){
-                if (i===data.pageable.pageNumber){
+                if (i==data.pageable.pageNumber){
                     statistical.pagingLocation.append(
-                        "<li class='active'>" +
+                        "<li class='page-item active'>" +
                         "<a class='page-link' tabindex='-1' " +
                         "onclick='statistical.getDataTypeExposureList(" + i + ");'>" +
                         (i+1) + "</a>" +
@@ -764,7 +764,7 @@ statistical.getDataTypeExposureList = function(page){
                 }
                 else {
                     statistical.pagingLocation.append(
-                        "<li>" +
+                        "<li class='page-item'>" +
                         "<a class='page-link' tabindex='-1' " +
                         "onclick='statistical.getDataTypeExposureList(" + i + ");'>" +
                         (i+1) + "</a>" +
@@ -778,7 +778,7 @@ statistical.getDataTypeExposureList = function(page){
             var nextPage = data.pageable.pageNumber + 1;
             if (nextPage<data.totalPages){
                 statistical.pagingLocation.append(
-                    "<li>" +
+                    "<li class='page-item'>" +
                     "   <a class='page-link' tabindex='-1' " +
                     "       onclick='statistical.getDataTypeExposureList(" + nextPage + ");'>" +
                     "Trang Sau</a>" +
@@ -787,7 +787,7 @@ statistical.getDataTypeExposureList = function(page){
             }
             else{
                 statistical.pagingLocation.append(
-                    "<li>" +
+                    "<li class='page-item disabled'>" +
                     "   <a class='page-link' tabindex='-1'>" +
                     "Trang Sau</a>" +
                     "</li>"
@@ -888,7 +888,7 @@ statistical.getDataEntryList = function(page){
             var previousPage = data.pageable.pageNumber - 1;
             if (previousPage >= 0){
                 statistical.pagingLocation.html(
-                    "<li>" +
+                    "<li class='page-item'>" +
                     "   <a class='page-link' tabindex='-1' " +
                     "       onclick='statistical.getDataEntryList(" + previousPage + ");'>" +
                     "Trang Trước</a>" +
@@ -897,7 +897,7 @@ statistical.getDataEntryList = function(page){
             }
             else {
                 statistical.pagingLocation.html(
-                    "<li class='disabled'>" +
+                    "<li class='page-item disabled'>" +
                     "   <a class='page-link' tabindex='-1' >" +
                     "Trang Trước</a>" +
                     "</li>");
@@ -914,9 +914,9 @@ statistical.getDataEntryList = function(page){
                 pagingEnd = data.totalPages;
             }
             for (var i=pagingStart; i<pagingEnd; i++){
-                if (i===data.pageable.pageNumber){
+                if (i==data.pageable.pageNumber){
                     statistical.pagingLocation.append(
-                        "<li class='active'>" +
+                        "<li class='page-item active'>" +
                         "<a class='page-link' tabindex='-1' " +
                         "onclick='statistical.getDataEntryList(" + i + ");'>" +
                         (i+1) + "</a>" +
@@ -924,7 +924,7 @@ statistical.getDataEntryList = function(page){
                 }
                 else {
                     statistical.pagingLocation.append(
-                        "<li>" +
+                        "<li class='page-item'>" +
                         "<a class='page-link' tabindex='-1' " +
                         "onclick='statistical.getDataEntryList(" + i + ");'>" +
                         (i+1) + "</a>" +
@@ -938,7 +938,7 @@ statistical.getDataEntryList = function(page){
             var nextPage = data.pageable.pageNumber + 1;
             if (nextPage<data.totalPages){
                 statistical.pagingLocation.append(
-                    "<li>" +
+                    "<li class='page-item'>" +
                     "   <a class='page-link' tabindex='-1' " +
                     "       onclick='statistical.getDataEntryList(" + nextPage + ");'>" +
                     "Trang Sau</a>" +
@@ -947,7 +947,7 @@ statistical.getDataEntryList = function(page){
             }
             else{
                 statistical.pagingLocation.append(
-                    "<li>" +
+                    "<li class='page-item disabled'>" +
                     "   <a class='page-link' tabindex='-1'>" +
                     "Trang Sau</a>" +
                     "</li>"

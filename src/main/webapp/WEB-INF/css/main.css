@@ -74,7 +74,7 @@ footer{
     margin-right: 0;
 }
 
-h1,h2,h3,h4,h5, button, .tittle{
+h1,h2,h3,h4,h5, button, .tittle, #pagingForTable{
     text-align: center;
     margin-right: auto;
     margin-left: auto;
@@ -95,7 +95,3 @@ h1,h2,h3,h4,h5{
 .test{
     color: rgba(223,49,240,0.76);
 }
-/*#locationOfChart{*/
-/*    width: 100%;*/
-/*    height: auto;*/
-/*}*/
