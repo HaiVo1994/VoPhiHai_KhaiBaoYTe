@@ -146,28 +146,30 @@ statistical.getSymptom = function () {
     }
 
 }
+
 statistical.pageSize = 5;
 statistical.modalForListPeople = $("#listPerson");
 statistical.modalForListPeople_tittle = $("#listPerson_tittle");
+statistical.tableHtml = "<table class='table'" +
+    "   <thead>" +
+    "       <tr>" +
+    "           <th scope='col'>Tên</th>" +
+    "           <th scope='col'>Ngày Nhập Cảnh</th>\n" +
+    "           <th scope='col'><a href='Chi Tiết'></th>\n" +
+    "       </tr>" +
+    "   </thead>" +
+    "   <tbody id='tableForListPerson_body'>" +
+    "   </tbody>" +
+    "</table>";
 statistical.getSymptomList = function(event){
     var activePoints = statistical.chartObject.getElementsAtEvent(event),
         firstPoint = activePoints[0],
         label = statistical.chartObject.data.labels[firstPoint._index].replace(statistical.symptomText, "");
     // var value = statistical.chartObject.data.datasets[firstPoint._datasetIndex].data[firstPoint._index];
-    statistical.tableLocation.html(
-        "<table class='table'" +
-        "   <thead>" +
-        "       <tr>" +
-        "           <th scope='col'>Tên</th>" +
-        "           <th scope='col'>Ngày Nhập Cảnh</th>\n" +
-        "           <th scope='col'><a href='Chi Tiết'></th>\n" +
-        "       </tr>" +
-        "   </thead>" +
-        "   <tbody id='tableForListPerson_body'>" +
-        "   </tbody>" +
-        "</table>"
+    statistical.tableLocation.html(statistical.tableHtml);
+    statistical.modalForListPeople_tittle.html(
+        "<h3>Danh Sách Những Người Có " + label + statistical.symptomText + "</h3>"
     );
-    statistical.modalForListPeople_tittle.html("<h3>Danh Sách Những Người Có " + label + " Triệu Chứng</h3>");
     statistical.modalForListPeople_tittle.append("<h4>" + statistical.getDateRangeText() +"</h4>")
     statistical.getDataSymptomList(0, label);
     statistical.modalForListPeople.modal("show");
@@ -175,6 +177,21 @@ statistical.getSymptomList = function(event){
 statistical.tableLocation = $("#tableForListPerson");
 statistical.pagingLocation = $("#pagingForTable");
 statistical.pagingVoid = "<li><a class='page-link' tabindex='-1'>.</li>";
+statistical.drawTable = function(personList){
+    var tableBody = $("#tableForListPerson_body");
+    tableBody.html("");
+    $.each(personList,
+        function (index, person) {
+            tableBody.append(
+                "<tr>" +
+                "   <td>" + person.name + "</td>" +
+                "   <td>" + statistical.getDate(person.date) + "</td>" +
+                "   <td><a href='/viewDeclare/" + person.idPerson +"' class='btn btn-info'>Chi Tiết</a></td>" +
+                "</tr>"
+            );
+        }
+    );
+}
 statistical.getDataSymptomList = function(page,amount){
     $.ajax(
         {
@@ -192,19 +209,7 @@ statistical.getDataSymptomList = function(page,amount){
         }
     ).done(
         function (data) {
-            var tableBody = $("#tableForListPerson_body");
-            tableBody.html("");
-            $.each(data.listPeople,
-                function (index, person) {
-                    tableBody.append(
-                        "<tr>" +
-                        "   <td>" + person.name + "</td>" +
-                        "   <td>" + statistical.getDate(person.date) + "</td>" +
-                        "   <td><a href='/viewDeclare/" + person.idPerson +"' class='btn btn-info'>Chi Tiết</a></td>" +
-                        "</tr>"
-                    );
-                }
-                );
+            statistical.drawTable(data.listPeople);
             var previousPage = data.page - 1;
             if (previousPage >= 0){
                 statistical.pagingLocation.html(
@@ -277,6 +282,7 @@ statistical.getDataSymptomList = function(page,amount){
     );
 }
 
+statistical.typeSymptomChartText = "Thống Kê Theo Loại Triệu Chứng Từ ";
 statistical.getByTypeSymptom = function () {
     if (statistical.setDateRange()){
         statistical.canvasValue();
@@ -327,7 +333,7 @@ statistical.getByTypeSymptom = function () {
                         },
                         title:{
                             display: true,
-                            text: "Thống Kê Theo Loại Triệu Chứng Từ " + statistical.getDateRangeText()
+                            text: statistical.typeSymptomChartText + statistical.getDateRangeText()
                         },
                         onClick: statistical.getTypeSymptomList
                     }
@@ -342,32 +348,18 @@ statistical.getByTypeSymptom = function () {
         );
     }
 }
-
 statistical.symptomName = "";
 statistical.getTypeSymptomList = function(event){
     var activePoints = statistical.chartObject.getElementsAtEvent(event),
         firstPoint = activePoints[0];
     statistical.symptomName = statistical.chartObject.data.labels[firstPoint._index];
 
-    statistical.tableLocation.html(
-        "<table class='table'" +
-        "   <thead>" +
-        "       <tr>" +
-        "           <th scope='col'>Tên</th>" +
-        "           <th scope='col'>Ngày Nhập Cảnh</th>\n" +
-        "           <th scope='col'><a href='Chi Tiết'></th>\n" +
-        "       </tr>" +
-        "   </thead>" +
-        "   <tbody id='tableForListPerson_body'>" +
-        "   </tbody>" +
-        "</table>"
-    );
+    statistical.tableLocation.html(statistical.tableHtml);
     statistical.modalForListPeople_tittle.html("<h3>Danh Sách Những Người Bị " + statistical.symptomName + "</h3>");
     statistical.modalForListPeople_tittle.append("<h4>" + statistical.getDateRangeText() +"</h4>")
     statistical.getDataTypeSymptomList(0);
     statistical.modalForListPeople.modal("show");
 }
-
 statistical.getDataTypeSymptomList = function(page){
     $.ajax(
         {
@@ -385,19 +377,7 @@ statistical.getDataTypeSymptomList = function(page){
         }
     ).done(
         function (data) {
-            var tableBody = $("#tableForListPerson_body");
-            tableBody.html("");
-            $.each(data.content,
-                function (index, person) {
-                    tableBody.append(
-                        "<tr>" +
-                        "   <td>" + person.name + "</td>" +
-                        "   <td>" + statistical.getDate(person.date) + "</td>" +
-                        "   <td><a href='/viewDeclare/" + person.idPerson +"' class='btn btn-info'>Chi Tiết</a></td>" +
-                        "</tr>"
-                    );
-                }
-            );
+            statistical.drawTable(data.content);
             var previousPage = data.pageable.pageNumber - 1;
             if (previousPage >= 0){
                 statistical.pagingLocation.html(
@@ -470,15 +450,11 @@ statistical.getDataTypeSymptomList = function(page){
     );
 }
 
+statistical.exposureText = " Nguồn";
+statistical.exposureChartText = "Thống Kê Số Người Có Cùng Số Nguồn Bệnh Đã Tiếp Xúc Từ ";
 statistical.getExposure = function () {
-    var dateBegin = $("#beginDate"),
-        dateEnd = $("#endDate");
-    if (dateBegin.valid() && dateEnd.valid()){
+    if (statistical.setDateRange()){
         statistical.canvasValue();
-        var dateRange = {
-            begin:dateBegin.val(),
-            end:dateEnd.val()
-        }
         $.ajax(
             {
                 url: urlRoot + "statistical_exposure/amount_people",
@@ -486,7 +462,7 @@ statistical.getExposure = function () {
                 dataType: 'json',
                 contentType: 'application/json',
                 async: false,
-                data:JSON.stringify(dateRange)
+                data:JSON.stringify(statistical.dateRange)
             }
         ).done(
             function (data) {
@@ -495,7 +471,7 @@ statistical.getExposure = function () {
                     border = [],
                     colorCount = 0;
                 $.each(data,function (index,value) {
-                    label.push(value.numberSymptom + " Nguồn");
+                    label.push(value.numberSymptom + statistical.exposureText);
                     dataValue.push(value.amountEntry);
                     background.push(statistical.backgroundColor[colorCount]);
                     border.push(statistical.borderColor[colorCount]);
@@ -525,13 +501,13 @@ statistical.getExposure = function () {
                         },
                         title:{
                             display: true,
-                            text: "Thống Kê Số Người Có Cùng Số Nguồn Bệnh Đã Tiếp Xúc Từ " + dateRange.begin + " Đến " + dateRange.end
-                        }
+                            text: statistical.exposureChartText + statistical.getDateRangeText()
+                        },
+                        onClick: statistical.getExposureList
                     }
                 }
                 statistical.chartObject = new Chart( cxt, chartSet);
                 staticPart.changeSizeOfMain();
-                $("#statisticalChart").onclick();
             }
         ).fail(
             function () {
@@ -541,15 +517,113 @@ statistical.getExposure = function () {
     }
 
 }
-statistical.getByTypeExposure = function () {
-    var dateBegin = $("#beginDate"),
-        dateEnd = $("#endDate");
-    if (dateBegin.valid() && dateEnd.valid()){
-        statistical.canvasValue();
-        var dateRange = {
-            begin:dateBegin.val(),
-            end:dateEnd.val()
+statistical.getExposureList = function(event){
+    var activePoints = statistical.chartObject.getElementsAtEvent(event),
+        firstPoint = activePoints[0],
+        label = statistical.chartObject.data.labels[firstPoint._index].replace(statistical.exposureText, "");
+    // var value = statistical.chartObject.data.datasets[firstPoint._datasetIndex].data[firstPoint._index];
+    statistical.tableLocation.html(statistical.tableHtml);
+    statistical.modalForListPeople_tittle.html(
+        "<h3>Danh Sách Những Người Từng Tiếp Xúc Với " + label + statistical.exposureText + "</h3>"
+    );
+    statistical.modalForListPeople_tittle.append("<h4>" + statistical.getDateRangeText() +"</h4>")
+    statistical.getDataExposureList(0, label);
+    statistical.modalForListPeople.modal("show");
+}
+statistical.getDataExposureList = function(page, amount){
+    $.ajax(
+        {
+            url: urlRoot + "statistical_exposure/amount_people/" + page + "/" + statistical.pageSize,
+            method: 'POST',
+            dataType: 'json',
+            contentType: 'application/json',
+            async: false,
+            // data:JSON.stringify(dateRange)
+            data:JSON.stringify({
+                begin:statistical.dateRange.begin,
+                end:statistical.dateRange.end,
+                amount: "" + amount
+            })
         }
+    ).done(
+        function (data) {
+            statistical.drawTable(data.listPeople)
+            var previousPage = data.page - 1;
+            if (previousPage >= 0){
+                statistical.pagingLocation.html(
+                    "<li>" +
+                    "   <a class='page-link' tabindex='-1' " +
+                    "       onclick='statistical.getDataExposureList(" + previousPage + ", " + amount + ");'>" +
+                    "Trang Trước</a>" +
+                    "</li>"
+                );
+            }
+            else {
+                statistical.pagingLocation.html(
+                    "<li class='disabled'>" +
+                    "   <a class='page-link' tabindex='-1' >" +
+                    "Trang Trước</a>" +
+                    "</li>");
+            }
+            var pagingStart = data.page - 3,
+                pagingEnd = data.page + 3;
+            if (pagingStart>0){
+                statistical.pagingLocation.append(statistical.pagingVoid);
+            }
+            else {
+                pagingStart = 0;
+            }
+            if (pagingEnd>data.pageAmount){
+                pagingEnd = data.pageAmount;
+            }
+            for (var i=pagingStart; i<pagingEnd; i++){
+                if (i===data.page){
+                    statistical.pagingLocation.append(
+                        "<li class='active'>" +
+                        "<a class='page-link' tabindex='-1' " +
+                        "onclick='statistical.getDataExposureList(" + i + ", " + amount + ");'>" +
+                        (i+1) + "</a>" +
+                        "</li>");
+                }
+                else {
+                    statistical.pagingLocation.append(
+                        "<li>" +
+                        "<a class='page-link' tabindex='-1' " +
+                        "onclick='statistical.getDataExposureList(" + i + ", " + amount + ");'>" +
+                        (i+1) + "</a>" +
+                        "</li>");
+                }
+
+            }
+            if (pagingEnd!==data.pageAmount){
+                statistical.pagingLocation.append(statistical.pagingVoid);
+            }
+            var nextPage = data.page + 1;
+            if (nextPage<data.pageAmount){
+                statistical.pagingLocation.append(
+                    "<li>" +
+                    "   <a class='page-link' tabindex='-1' " +
+                    "       onclick='statistical.getDataExposureList(" + nextPage + ", " + amount + ");'>" +
+                    "Trang Sau</a>" +
+                    "</li>"
+                );
+            }
+            else{
+                statistical.pagingLocation.append(
+                    "<li>" +
+                    "   <a class='page-link' tabindex='-1'>" +
+                    "Trang Sau</a>" +
+                    "</li>"
+                );
+            }
+        }
+    );
+}
+
+statistical.exposureTypeChartText = "Thống Kê Số Người Từng Tiếp Xúc Với Các Loại Nguồn Bệnh";
+statistical.getByTypeExposure = function () {
+    if (statistical.setDateRange()){
+        statistical.canvasValue();
         $.ajax(
             {
                 url: urlRoot + "statistical_exposure/exposureType",
@@ -557,7 +631,7 @@ statistical.getByTypeExposure = function () {
                 dataType: 'json',
                 contentType: 'application/json',
                 async: false,
-                data:JSON.stringify(dateRange)
+                data:JSON.stringify(statistical.dateRange)
             }
         ).done(
             function (data) {
@@ -597,8 +671,9 @@ statistical.getByTypeExposure = function () {
                         },
                         title:{
                             display: true,
-                            text: "Thống Kê Số Người Từng Tiếp Xúc Với Các Loại Nguồn Bệnh Từ " + dateRange.begin + " Đến " + dateRange.end
-                        }
+                            text: statistical.exposureTypeChartText + statistical.getDateRangeText()
+                        },
+                        onClick: statistical.getTypeExposureList
                     }
                 }
                 statistical.chartObject = new Chart( cxt, chartSet);
@@ -610,6 +685,108 @@ statistical.getByTypeExposure = function () {
             }
         );
     }
+}
+statistical.exposureName = "";
+statistical.getTypeExposureList = function(event){
+    var activePoints = statistical.chartObject.getElementsAtEvent(event),
+        firstPoint = activePoints[0];
+    statistical.exposureName = statistical.chartObject.data.labels[firstPoint._index];
+
+    statistical.tableLocation.html(statistical.tableHtml);
+    statistical.modalForListPeople_tittle.html("<h3>Danh Sách Những Người Từng Tiếp Xúc Với</h3>");
+    statistical.modalForListPeople_tittle.append("<h4>" + statistical.exposureName +"</h4>")
+    statistical.modalForListPeople_tittle.append("<h4>" + statistical.getDateRangeText() +"</h4>")
+    statistical.getDataTypeExposureList(0);
+    statistical.modalForListPeople.modal("show");
+}
+statistical.getDataTypeExposureList = function(page){
+    $.ajax(
+        {
+            url: urlRoot + "statistical_exposure/exposureType/" + page + "/" + statistical.pageSize,
+            method: 'POST',
+            dataType: 'json',
+            contentType: 'application/json',
+            async: false,
+            // data:JSON.stringify(dateRange)
+            data:JSON.stringify({
+                begin:statistical.dateRange.begin,
+                end:statistical.dateRange.end,
+                exposure: statistical.exposureName
+            })
+        }
+    ).done(
+        function (data) {
+            statistical.drawTable(data.content);
+            var previousPage = data.pageable.pageNumber - 1;
+            if (previousPage >= 0){
+                statistical.pagingLocation.html(
+                    "<li>" +
+                    "   <a class='page-link' tabindex='-1' " +
+                    "       onclick='statistical.getDataTypeExposureList(" + previousPage + ");'>" +
+                    "Trang Trước</a>" +
+                    "</li>"
+                );
+            }
+            else {
+                statistical.pagingLocation.html(
+                    "<li class='disabled'>" +
+                    "   <a class='page-link' tabindex='-1' >" +
+                    "Trang Trước</a>" +
+                    "</li>");
+            }
+            var pagingStart = data.pageable.pageNumber - 3,
+                pagingEnd = data.pageable.pageNumber + 3;
+            if (pagingStart>0){
+                statistical.pagingLocation.append(statistical.pagingVoid);
+            }
+            else {
+                pagingStart = 0;
+            }
+            if (pagingEnd>data.totalPages){
+                pagingEnd = data.totalPages;
+            }
+            for (var i=pagingStart; i<pagingEnd; i++){
+                if (i===data.pageable.pageNumber){
+                    statistical.pagingLocation.append(
+                        "<li class='active'>" +
+                        "<a class='page-link' tabindex='-1' " +
+                        "onclick='statistical.getDataTypeExposureList(" + i + ");'>" +
+                        (i+1) + "</a>" +
+                        "</li>");
+                }
+                else {
+                    statistical.pagingLocation.append(
+                        "<li>" +
+                        "<a class='page-link' tabindex='-1' " +
+                        "onclick='statistical.getDataTypeExposureList(" + i + ");'>" +
+                        (i+1) + "</a>" +
+                        "</li>");
+                }
+
+            }
+            if (pagingEnd!==data.totalPages){
+                statistical.pagingLocation.append(statistical.pagingVoid);
+            }
+            var nextPage = data.pageable.pageNumber + 1;
+            if (nextPage<data.totalPages){
+                statistical.pagingLocation.append(
+                    "<li>" +
+                    "   <a class='page-link' tabindex='-1' " +
+                    "       onclick='statistical.getDataTypeExposureList(" + nextPage + ");'>" +
+                    "Trang Sau</a>" +
+                    "</li>"
+                );
+            }
+            else{
+                statistical.pagingLocation.append(
+                    "<li>" +
+                    "   <a class='page-link' tabindex='-1'>" +
+                    "Trang Sau</a>" +
+                    "</li>"
+                );
+            }
+        }
+    );
 }
 
 statistical.getEntry = function () {

@@ -42,7 +42,8 @@ public interface StatusRepository extends CrudRepository<Status, Long> {
             "FROM Status s " +
             "WHERE s.entry.immigrationDate >= :startDate AND s.entry.immigrationDate<= :endDate " +
             "AND s.symptom = :symptom " +
-            "AND s.haveSymptom = true ")
+            "AND s.haveSymptom = true " +
+            "ORDER BY s.entry.immigrationDate")
     Page<Statistical_Person> getListPersonBySymptomType(@Param("startDate") Date begin,
                                                         @Param("endDate") Date end,
                                                         @Param("symptom") Symptom symptom,

@@ -23,6 +23,11 @@ public class ExposureServiceImpl implements ExposureService {
     }
 
     @Override
+    public Exposure findByName(String name) {
+        return exposureRepository.findByName(name);
+    }
+
+    @Override
     public List<Exposure> findAllEnable() {
         return exposureRepository.getAllEnabled();
     }
